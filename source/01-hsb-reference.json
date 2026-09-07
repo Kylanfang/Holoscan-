@@ -1,0 +1,403 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "NVIDIA HSB 2.7 · RoCE 官方参考路径",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1368,
+      760
+    ],
+    "views": [
+      {
+        "id": "rdma-data-path",
+        "label": "RDMA 数据主路径",
+        "focus": [
+          "sensor",
+          "fpga-dp",
+          "cx",
+          "gpu-mem",
+          "rx-op",
+          "pipeline"
+        ],
+        "note": "传感器有效载荷经 FPGA 封包和 RoCE v2 直写 GPU 显存，绕过 CPU 内存复制。"
+      },
+      {
+        "id": "control-plane",
+        "label": "设备控制面",
+        "focus": [
+          "app",
+          "fpga-ctrl",
+          "fpga-dp",
+          "sensor"
+        ],
+        "note": "hololink 模块经 ECB(UDP) 读写 FPGA 寄存器，再由 I2C/SPI/GPIO 配置传感器与时钟。"
+      },
+      {
+        "id": "frame-metadata",
+        "label": "帧完成与元数据",
+        "focus": [
+          "sensor",
+          "fpga-dp",
+          "cx",
+          "completion",
+          "rx-op"
+        ],
+        "note": "0x2B Write-Immediate 进入完成队列并触发 CPU 事件；元数据携带帧号、CRC 与 PTP 时间戳。"
+      }
+    ],
+    "visual_preset": "signal-flow"
+  },
+  "components": [
+    {
+      "id": "sensor",
+      "type": "external",
+      "label": "高速传感器",
+      "sublabel": "IMX274/477 · MIPI CSI-2",
+      "tag": "SENSOR",
+      "pos": [
+        36,
+        130
+      ],
+      "size": [
+        140,
+        80
+      ]
+    },
+    {
+      "id": "fpga-dp",
+      "type": "backend",
+      "label": "HSB FPGA · 数据面",
+      "sublabel": "AXI-S → RoCE v2",
+      "tag": "参考",
+      "pos": [
+        240,
+        130
+      ],
+      "size": [
+        180,
+        80
+      ]
+    },
+    {
+      "id": "cx",
+      "type": "messagebus",
+      "label": "ConnectX SmartNIC",
+      "sublabel": "RoCE v2 卸载 · 直写显存",
+      "tag": "HOST NIC",
+      "pos": [
+        484,
+        130
+      ],
+      "size": [
+        170,
+        80
+      ]
+    },
+    {
+      "id": "gpu-mem",
+      "type": "database",
+      "label": "GPU 显存",
+      "sublabel": "GPUDirect RDMA 缓冲",
+      "tag": "GPU",
+      "pos": [
+        718,
+        130
+      ],
+      "size": [
+        164,
+        80
+      ]
+    },
+    {
+      "id": "rx-op",
+      "type": "frontend",
+      "label": "接收算子",
+      "sublabel": "RoceReceiverOp · 待绑定版本",
+      "tag": "OPERATOR",
+      "pos": [
+        938,
+        130
+      ],
+      "size": [
+        170,
+        80
+      ]
+    },
+    {
+      "id": "pipeline",
+      "type": "cloud",
+      "label": "GPU 处理流水线",
+      "sublabel": "CSI→Bayer · ISP · 推理",
+      "tag": "OPERATORS",
+      "pos": [
+        938,
+        380
+      ],
+      "size": [
+        170,
+        80
+      ]
+    },
+    {
+      "id": "completion",
+      "type": "messagebus",
+      "label": "完成队列 / CPU 事件",
+      "sublabel": "Write-Immediate · CQ",
+      "tag": "EVENT",
+      "pos": [
+        718,
+        380
+      ],
+      "size": [
+        164,
+        80
+      ]
+    },
+    {
+      "id": "fpga-ctrl",
+      "type": "security",
+      "label": "HSB FPGA · 控制面",
+      "sublabel": "ECB→APB · I2C/SPI/GPIO",
+      "tag": "FPGA",
+      "pos": [
+        240,
+        380
+      ],
+      "size": [
+        180,
+        80
+      ]
+    },
+    {
+      "id": "app",
+      "type": "frontend",
+      "label": "Holoscan 应用",
+      "sublabel": "Fragment · Operator · Sensor API",
+      "tag": "APP",
+      "pos": [
+        240,
+        630
+      ],
+      "size": [
+        180,
+        80
+      ]
+    },
+    {
+      "id": "gxf",
+      "type": "security",
+      "label": "Holoscan SDK / GXF",
+      "sublabel": "Scheduler · Executor · GXF",
+      "tag": "RUNTIME",
+      "pos": [
+        484,
+        630
+      ],
+      "size": [
+        170,
+        80
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "SENSOR 域",
+      "wraps": [
+        "sensor"
+      ],
+      "pad": 24
+    },
+    {
+      "kind": "region",
+      "label": "HSB 设备（FPGA）",
+      "wraps": [
+        "fpga-dp",
+        "fpga-ctrl"
+      ],
+      "pad": 26
+    },
+    {
+      "kind": "region",
+      "label": "HOST",
+      "wraps": [
+        "cx",
+        "completion"
+      ],
+      "pad": 26
+    },
+    {
+      "kind": "region",
+      "label": "GPU",
+      "wraps": [
+        "gpu-mem"
+      ],
+      "pad": 24
+    },
+    {
+      "kind": "region",
+      "label": "HOLOSCAN OPERATOR PIPELINE",
+      "wraps": [
+        "rx-op",
+        "pipeline"
+      ],
+      "pad": 26
+    },
+    {
+      "kind": "region",
+      "label": "HOLOSCAN APPLICATION",
+      "wraps": [
+        "app"
+      ],
+      "pad": 24
+    },
+    {
+      "kind": "region",
+      "label": "RUNTIME",
+      "wraps": [
+        "gxf"
+      ],
+      "pad": 24
+    }
+  ],
+  "connections": [
+    {
+      "id": "sensor-to-fpga",
+      "from": "sensor",
+      "to": "fpga-dp",
+      "label": "MIPI CSI-2",
+      "variant": "emphasis",
+      "labelDy": 62,
+      "width": 2.5
+    },
+    {
+      "id": "fpga-to-cx",
+      "from": "fpga-dp",
+      "to": "cx",
+      "label": "RoCE v2 / 10GbE",
+      "variant": "emphasis",
+      "labelDy": 62,
+      "width": 3
+    },
+    {
+      "id": "cx-to-gpu",
+      "from": "cx",
+      "to": "gpu-mem",
+      "label": "GPUDirect RDMA Write",
+      "variant": "emphasis",
+      "labelDy": 62,
+      "width": 3.5
+    },
+    {
+      "id": "gpu-to-rxop",
+      "from": "gpu-mem",
+      "to": "rx-op",
+      "label": "接收缓冲引用",
+      "variant": "emphasis",
+      "labelDy": 62,
+      "width": 2.5
+    },
+    {
+      "id": "rxop-to-pipeline",
+      "from": "rx-op",
+      "to": "pipeline",
+      "label": "Holoscan Tensor",
+      "variant": "emphasis",
+      "width": 2.5,
+      "labelAt": [
+        1160,
+        295
+      ]
+    },
+    {
+      "id": "cx-to-completion",
+      "from": "cx",
+      "to": "completion",
+      "label": "0x2B / CQE",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "completion-to-rxop",
+      "from": "completion",
+      "to": "rx-op",
+      "label": "唤醒 get_next_frame",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "bottom"
+    },
+    {
+      "id": "ctrl-to-dp",
+      "from": "fpga-ctrl",
+      "to": "fpga-dp",
+      "label": "寄存器配置",
+      "variant": "dashed",
+      "labelDx": 66,
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "app-to-ctrl",
+      "from": "app",
+      "to": "fpga-ctrl",
+      "label": "hololink / DataChannel",
+      "variant": "dashed",
+      "labelAt": [
+        330,
+        548
+      ],
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "ctrl-to-sensor",
+      "from": "fpga-ctrl",
+      "to": "sensor",
+      "label": "I2C · SPI · GPIO",
+      "variant": "dashed",
+      "fromSide": "left",
+      "toSide": "bottom"
+    },
+    {
+      "id": "gxf-to-pipeline",
+      "from": "gxf",
+      "to": "pipeline",
+      "label": "Scheduler 调度 Operator",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "gxf-to-app",
+      "from": "gxf",
+      "to": "app",
+      "label": "Executor 管理 Fragment",
+      "variant": "dashed",
+      "labelAt": [
+        452,
+        724
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "官方参考能力；不等于项目实装",
+      "items": [
+        "有效载荷经 NIC 直写已注册内存；Socket 路径见主机子图",
+        "0x2A 数据与 0x2B 元数据写入不等同于 Tensor 算法格式"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "消费前置条件仍需项目绑定",
+      "items": [
+        "CQE、完整性、GPU 可见性、缓冲可复用是独立条件",
+        "NIC / GPU / IP / SDK 版本与板上证据待绑定"
+      ]
+    }
+  ]
+}

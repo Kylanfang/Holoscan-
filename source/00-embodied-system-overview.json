@@ -1,0 +1,415 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "多模态具身系统 · 目标架构与工程缺口",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1368,
+      800
+    ],
+    "views": [
+      {
+        "id": "sensor-to-tensor",
+        "label": "Sensor-to-Tensor",
+        "focus": [
+          "sensors",
+          "fpga-pre",
+          "align",
+          "transport",
+          "gpu-buffer",
+          "fusion"
+        ],
+        "note": "各模态独立发送；采样事件、到达时刻分开记录，在融合端按时间关联。"
+      },
+      {
+        "id": "closed-loop",
+        "label": "感知控制闭环",
+        "focus": [
+          "sensors",
+          "fusion",
+          "planning",
+          "rt-control",
+          "actuators",
+          "world"
+        ],
+        "note": "目标架构：本地反馈和独立停机路径见实时控制子图，尚无闭环验收证据。"
+      },
+      {
+        "id": "control-config",
+        "label": "配置与调度",
+        "focus": [
+          "orchestrator",
+          "fpga-pre",
+          "align",
+          "transport",
+          "fusion",
+          "planning"
+        ],
+        "note": "Host/Holoscan 负责任务编排、参数配置和状态回传，虚线（橙色标签）不承载传感器有效载荷。"
+      }
+    ],
+    "visual_preset": "signal-flow"
+  },
+  "components": [
+    {
+      "id": "sensors",
+      "type": "external",
+      "label": "多源传感器",
+      "sublabel": "相机 · 音频 · 雷达 · IMU",
+      "tag": "INPUT",
+      "pos": [
+        30,
+        120
+      ],
+      "size": [
+        160,
+        82
+      ]
+    },
+    {
+      "id": "fpga-pre",
+      "type": "backend",
+      "label": "FPGA 模态适配",
+      "sublabel": "算法位置 / 资源待冻结",
+      "tag": "DRILLDOWN",
+      "pos": [
+        330,
+        120
+      ],
+      "size": [
+        170,
+        82
+      ]
+    },
+    {
+      "id": "align",
+      "type": "security",
+      "label": "采样事件与时标",
+      "sublabel": "采样 ≠ 到达 · 误差待测",
+      "tag": "待设计",
+      "pos": [
+        630,
+        120
+      ],
+      "size": [
+        170,
+        82
+      ]
+    },
+    {
+      "id": "transport",
+      "type": "messagebus",
+      "label": "HSB 以太网通道",
+      "sublabel": "RoCE 基准候选 · 10GbE",
+      "tag": "DRILLDOWN",
+      "pos": [
+        930,
+        120
+      ],
+      "size": [
+        180,
+        82
+      ]
+    },
+    {
+      "id": "gpu-buffer",
+      "type": "database",
+      "label": "接收与工作缓冲",
+      "sublabel": "可见性 · 校验 · 防覆盖",
+      "tag": "待绑定",
+      "pos": [
+        930,
+        390
+      ],
+      "size": [
+        180,
+        82
+      ]
+    },
+    {
+      "id": "fusion",
+      "type": "cloud",
+      "label": "时间关联与融合",
+      "sublabel": "独立流 · 缺失模态策略",
+      "tag": "待实现",
+      "pos": [
+        630,
+        390
+      ],
+      "size": [
+        180,
+        82
+      ]
+    },
+    {
+      "id": "planning",
+      "type": "frontend",
+      "label": "状态估计与规划",
+      "sublabel": "目标有效期 · 时限待定",
+      "tag": "规划",
+      "pos": [
+        330,
+        390
+      ],
+      "size": [
+        180,
+        82
+      ]
+    },
+    {
+      "id": "rt-control",
+      "type": "security",
+      "label": "本地实时控制",
+      "sublabel": "反馈 · 失联 · 独立停机",
+      "tag": "待实现",
+      "pos": [
+        30,
+        390
+      ],
+      "size": [
+        180,
+        82
+      ]
+    },
+    {
+      "id": "actuators",
+      "type": "external",
+      "label": "执行器",
+      "sublabel": "驱动器与反馈接口待定",
+      "tag": "待实现",
+      "pos": [
+        30,
+        650
+      ],
+      "size": [
+        180,
+        82
+      ]
+    },
+    {
+      "id": "world",
+      "type": "external",
+      "label": "物理环境",
+      "sublabel": "运动与环境反馈",
+      "tag": "WORLD",
+      "pos": [
+        330,
+        650
+      ],
+      "size": [
+        170,
+        82
+      ]
+    },
+    {
+      "id": "orchestrator",
+      "type": "frontend",
+      "label": "Host / Holoscan 编排",
+      "sublabel": "配置 · Scheduler · Telemetry",
+      "tag": "DRILLDOWN",
+      "pos": [
+        1150,
+        650
+      ],
+      "size": [
+        190,
+        82
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "感知前端 FPGA",
+      "wraps": [
+        "fpga-pre",
+        "align",
+        "transport"
+      ],
+      "pad": 24
+    },
+    {
+      "kind": "region",
+      "label": "GPU / AI 计算",
+      "wraps": [
+        "gpu-buffer",
+        "fusion",
+        "planning"
+      ],
+      "pad": 24
+    },
+    {
+      "kind": "region",
+      "label": "实时执行域",
+      "wraps": [
+        "rt-control",
+        "actuators"
+      ],
+      "pad": 24
+    }
+  ],
+  "connections": [
+    {
+      "id": "sensor-pre",
+      "from": "sensors",
+      "to": "fpga-pre",
+      "label": "原始多模态流",
+      "variant": "emphasis",
+      "width": 2.5,
+      "labelDy": 64
+    },
+    {
+      "id": "pre-align",
+      "from": "fpga-pre",
+      "to": "align",
+      "label": "帧 / 采样事件",
+      "variant": "emphasis",
+      "width": 2.5,
+      "labelDy": 64
+    },
+    {
+      "id": "align-transport",
+      "from": "align",
+      "to": "transport",
+      "label": "载荷 + 时间描述",
+      "variant": "emphasis",
+      "width": 2.5,
+      "labelDy": 64
+    },
+    {
+      "id": "transport-buffer",
+      "from": "transport",
+      "to": "gpu-buffer",
+      "label": "RoCE / NIC 写入",
+      "variant": "emphasis",
+      "width": 3,
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        1093,
+        216
+      ]
+    },
+    {
+      "id": "buffer-fusion",
+      "from": "gpu-buffer",
+      "to": "fusion",
+      "label": "校验并可见的数据",
+      "variant": "emphasis",
+      "width": 2.5,
+      "labelDy": 64
+    },
+    {
+      "id": "fusion-planning",
+      "from": "fusion",
+      "to": "planning",
+      "label": "感知结果",
+      "variant": "emphasis",
+      "width": 2.5,
+      "labelDy": 64
+    },
+    {
+      "id": "planning-control",
+      "from": "planning",
+      "to": "rt-control",
+      "label": "带有效期动作目标",
+      "variant": "emphasis",
+      "width": 2.5,
+      "labelDy": 64
+    },
+    {
+      "id": "control-actuator",
+      "from": "rt-control",
+      "to": "actuators",
+      "label": "命令 · 时限待测",
+      "variant": "emphasis",
+      "width": 2.5,
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        212,
+        486
+      ]
+    },
+    {
+      "id": "actuator-world",
+      "from": "actuators",
+      "to": "world",
+      "label": "物理作用",
+      "variant": "emphasis",
+      "width": 2.5,
+      "labelDy": -38
+    },
+    {
+      "id": "world-sensor",
+      "from": "world",
+      "to": "sensors",
+      "label": "环境反馈",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "via": [
+        [
+          415,
+          760
+        ],
+        [
+          10,
+          760
+        ],
+        [
+          10,
+          161
+        ]
+      ],
+      "labelAt": [
+        24,
+        570
+      ]
+    },
+    {
+      "id": "orch-transport",
+      "from": "orchestrator",
+      "to": "transport",
+      "label": "参数配置 / 运行监测",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "right",
+      "via": [
+        [
+          1350,
+          691
+        ],
+        [
+          1350,
+          161
+        ]
+      ],
+      "labelAt": [
+        1294,
+        540
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "目标架构；项目硬件尚未签收",
+      "items": [
+        "青色实线表示运行数据与动作目标；虚线（橙色标签）表示配置与事件",
+        "节点状态与线型独立；视频/音频仅有原交付材料声明"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "四项阻断：进入子图查看关闭条件",
+      "items": [
+        "带宽与算法分工、采样语义、Buffer 复用、实时控制边界均待冻结",
+        "图形校验、浏览器测试与硬件验收分别记录"
+      ]
+    }
+  ]
+}
+

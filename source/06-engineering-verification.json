@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "工程签收 · 条件、版本与证据闭合",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1368,
+      760
+    ],
+    "views": [
+      {
+        "id": "traceability",
+        "label": "设计追溯",
+        "focus": [
+          "requirements",
+          "contracts",
+          "rtl",
+          "driver",
+          "operators",
+          "evidence"
+        ],
+        "note": "每个架构节点和数据边绑定实现文件、接口版本与验证证据。"
+      },
+      {
+        "id": "runtime-metrics",
+        "label": "运行验证",
+        "focus": [
+          "rtl",
+          "driver",
+          "operators",
+          "instrument",
+          "metrics",
+          "evidence"
+        ],
+        "note": "FPGA、网络和 Holoscan 使用同一 Frame/Buffer/Trace ID 关联测量。"
+      }
+    ],
+    "visual_preset": "signal-flow"
+  },
+  "components": [
+    {
+      "id": "requirements",
+      "type": "external",
+      "label": "系统指标与场景",
+      "sublabel": "延迟 · 抖动 · 丢帧 · 安全",
+      "tag": "待冻结",
+      "pos": [
+        30,
+        120
+      ],
+      "size": [
+        180,
+        80
+      ]
+    },
+    {
+      "id": "contracts",
+      "type": "database",
+      "label": "接口与 Tensor 契约",
+      "sublabel": "格式 · 时钟 · Buffer · 错误策略",
+      "tag": "候选契约",
+      "pos": [
+        300,
+        120
+      ],
+      "size": [
+        190,
+        80
+      ]
+    },
+    {
+      "id": "rtl",
+      "type": "backend",
+      "label": "FPGA / RTL 实现",
+      "sublabel": "模块 · 端口 · 寄存器 · Bitstream",
+      "tag": "待绑定",
+      "pos": [
+        580,
+        120
+      ],
+      "size": [
+        190,
+        80
+      ]
+    },
+    {
+      "id": "driver",
+      "type": "frontend",
+      "label": "驱动与传输实现",
+      "sublabel": "DMA/RDMA · CQ · Buffer Pool",
+      "tag": "待绑定",
+      "pos": [
+        860,
+        120
+      ],
+      "size": [
+        190,
+        80
+      ]
+    },
+    {
+      "id": "operators",
+      "type": "cloud",
+      "label": "Holoscan Operator 图",
+      "sublabel": "端口 · Scheduler · Memory Pool",
+      "tag": "待绑定",
+      "pos": [
+        1140,
+        120
+      ],
+      "size": [
+        200,
+        80
+      ]
+    },
+    {
+      "id": "instrument",
+      "type": "security",
+      "label": "统一可观测性",
+      "sublabel": "ILA · NIC/PCAP/CQ · Flow Tracking",
+      "tag": "待实现",
+      "pos": [
+        580,
+        390
+      ],
+      "size": [
+        210,
+        84
+      ]
+    },
+    {
+      "id": "metrics",
+      "type": "database",
+      "label": "性能与稳定性指标",
+      "sublabel": "吞吐 · 尾延迟 · 数据年龄",
+      "tag": "待实测",
+      "pos": [
+        860,
+        640
+      ],
+      "size": [
+        210,
+        80
+      ]
+    },
+    {
+      "id": "evidence",
+      "type": "external",
+      "label": "可签署工程证据",
+      "sublabel": "配置 · 版本 · 阈值 · 报告",
+      "tag": "尚未签收",
+      "pos": [
+        1140,
+        640
+      ],
+      "size": [
+        200,
+        80
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "req-contract",
+      "from": "requirements",
+      "to": "contracts",
+      "label": "可验证约束",
+      "variant": "emphasis",
+      "width": 2.5,
+      "labelDy": 64
+    },
+    {
+      "id": "contract-rtl",
+      "from": "contracts",
+      "to": "rtl",
+      "label": "总线 / 时钟 / 数据契约",
+      "variant": "emphasis",
+      "width": 2.5,
+      "labelDy": 64
+    },
+    {
+      "id": "rtl-driver",
+      "from": "rtl",
+      "to": "driver",
+      "label": "寄存器 / DMA / 网络接口",
+      "variant": "emphasis",
+      "width": 2.5,
+      "labelAt": [
+        815,
+        214
+      ]
+    },
+    {
+      "id": "driver-ops",
+      "from": "driver",
+      "to": "operators",
+      "label": "Tensor + Metadata",
+      "variant": "emphasis",
+      "width": 2.5,
+      "labelAt": [
+        1095,
+        214
+      ]
+    },
+    {
+      "id": "rtl-instrument",
+      "from": "rtl",
+      "to": "instrument",
+      "label": "Frame / Buffer / Trace ID",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        800,
+        300
+      ]
+    },
+    {
+      "id": "instrument-metrics",
+      "from": "instrument",
+      "to": "metrics",
+      "label": "关联后的实测样本",
+      "variant": "emphasis",
+      "width": 2.5
+    },
+    {
+      "id": "metrics-evidence",
+      "from": "metrics",
+      "to": "evidence",
+      "label": "版本化测试结论",
+      "variant": "emphasis",
+      "width": 2.5,
+      "labelDy": -38
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "项目状态与证据来源分别记录",
+      "items": [
+        "PPT 声明 ≠ 原始报告；官方能力 ≠ 项目验证；设计指标 ≠ 实测结果",
+        "绑定 BOM、RTL、Bitstream、驱动、模型与测试环境，缺项不得升级状态"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "阻断项与故障注入",
+      "items": [
+        "带宽 / 分工、采样语义、Buffer 所有权、实时控制四项未关闭",
+        "另验资源 / 时序 / 功耗温度；P99 不能单独证明硬实时"
+      ]
+    }
+  ]
+}

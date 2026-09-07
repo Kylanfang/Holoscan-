@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "缓冲生命周期 · 拟议验收协议",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1080,
+      630
+    ],
+    "visual_preset": "signal-flow"
+  },
+  "lanes": [
+    {
+      "id": "main",
+      "label": "逻辑状态；接口实现待绑定"
+    },
+    {
+      "id": "buffer-error",
+      "label": "异常隔离与恢复"
+    },
+    {
+      "id": "terminal",
+      "label": "停用与资源释放"
+    }
+  ],
+  "states": [
+    {
+      "id": "buf-free",
+      "type": "start",
+      "label": "空闲",
+      "sublabel": "FREE",
+      "lane": "main",
+      "col": 0
+    },
+    {
+      "id": "buf-write",
+      "type": "active",
+      "label": "正在写入",
+      "sublabel": "WRITING",
+      "lane": "main",
+      "col": 1
+    },
+    {
+      "id": "buf-check",
+      "type": "decision",
+      "label": "完成校验",
+      "sublabel": "CHECKING",
+      "lane": "main",
+      "col": 2
+    },
+    {
+      "id": "buf-ready",
+      "type": "active",
+      "label": "允许消费",
+      "sublabel": "READY / 可见",
+      "lane": "main",
+      "col": 3
+    },
+    {
+      "id": "buf-use",
+      "type": "active",
+      "label": "正在消费",
+      "sublabel": "IN_USE",
+      "lane": "main",
+      "col": 4
+    },
+    {
+      "id": "buf-invalid",
+      "type": "failure",
+      "label": "隔离无效缓冲",
+      "sublabel": "INVALID / 停写",
+      "lane": "buffer-error",
+      "col": 0
+    },
+    {
+      "id": "buf-retired",
+      "type": "neutral",
+      "label": "已撤销映射",
+      "sublabel": "RETIRED / 停用",
+      "lane": "terminal",
+      "col": 2
+    }
+  ],
+  "transitions": [
+    {
+      "id": "buf-recycle",
+      "from": "buf-use",
+      "to": "buf-free",
+      "label": "消费完成且允许复用",
+      "variant": "dashed",
+      "route": "top-channel",
+      "fromSide": "top",
+      "toSide": "top"
+    },
+    {
+      "id": "buf-reject",
+      "from": "buf-check",
+      "to": "buf-invalid",
+      "label": "长度 / CRC / 代际异常",
+      "variant": "security",
+      "labelAt": [
+        505,
+        230
+      ]
+    },
+    {
+      "id": "buf-recover",
+      "from": "buf-invalid",
+      "to": "buf-write",
+      "label": "排空后重新接收",
+      "variant": "dashed",
+      "fromSide": "left",
+      "toSide": "bottom"
+    },
+    {
+      "id": "buf-retire",
+      "from": "buf-use",
+      "to": "buf-retired",
+      "label": "停机且 DMA 已排空",
+      "variant": "dashed",
+      "labelAt": [
+        825,
+        375
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "状态条件；不宣称 HSB 已实现信用流控",
+      "items": [
+        "帧身份 / 长度 / 完整性通过，且满足平台可见性，才能进入 READY",
+        "GPU 所有消费者完成后才可归还；接收代际必须匹配"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "覆盖风险必须用真实机制关闭",
+      "items": [
+        "证明发送端信用或地址轮换；否则限制复用时间或复制到工作区",
+        "INVALID 隔离后须停写排空；不得仅清除软件标志就恢复"
+      ]
+    }
+  ]
+}

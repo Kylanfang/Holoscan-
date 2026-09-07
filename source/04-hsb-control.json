@@ -1,0 +1,357 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "HSB 控制面 · 事务与时钟复位责任",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1368,
+      760
+    ],
+    "views": [
+      {
+        "id": "ecb-path",
+        "label": "ECB 寄存器访问路径",
+        "focus": [
+          "host-cmd",
+          "host-rx",
+          "rx-parser",
+          "ecb",
+          "apb",
+          "reg-map",
+          "peripherals",
+          "board-periph"
+        ],
+        "note": "主机 ECB(UDP) 命令经解析、解码后转为 32-bit APB 访问，直达外设寄存器。"
+      },
+      {
+        "id": "timing-domain",
+        "label": "时基与时钟",
+        "focus": [
+          "clocks",
+          "ptp",
+          "reg-map",
+          "peripherals"
+        ],
+        "note": "四时钟域并行：HIF/APB/SIF/PTP；PTP 遵循 IEEE 1588-2019 为帧打时间戳。"
+      }
+    ],
+    "visual_preset": "signal-flow"
+  },
+  "components": [
+    {
+      "id": "host-cmd",
+      "type": "external",
+      "label": "主机控制流量",
+      "sublabel": "ECB·BOOTP·ICMP",
+      "tag": "HOST",
+      "pos": [
+        36,
+        130
+      ],
+      "size": [
+        140,
+        80
+      ]
+    },
+    {
+      "id": "host-rx",
+      "type": "frontend",
+      "label": "Host RX 接口",
+      "sublabel": "MAC RX AXI-S",
+      "tag": "HIF",
+      "pos": [
+        216,
+        130
+      ],
+      "size": [
+        140,
+        80
+      ]
+    },
+    {
+      "id": "rx-parser",
+      "type": "backend",
+      "label": "rx_parser",
+      "sublabel": "协议分流解析",
+      "tag": "PARSE",
+      "pos": [
+        396,
+        130
+      ],
+      "size": [
+        140,
+        80
+      ]
+    },
+    {
+      "id": "ecb",
+      "type": "security",
+      "label": "ECB 解码",
+      "sublabel": "DWORD/BLOCK",
+      "tag": "ECB",
+      "pos": [
+        576,
+        130
+      ],
+      "size": [
+        140,
+        80
+      ]
+    },
+    {
+      "id": "apb",
+      "type": "messagebus",
+      "label": "APB 总线",
+      "sublabel": "32-bit 对齐",
+      "tag": "APB",
+      "pos": [
+        756,
+        130
+      ],
+      "size": [
+        140,
+        80
+      ]
+    },
+    {
+      "id": "reg-map",
+      "type": "database",
+      "label": "寄存器映射",
+      "sublabel": "SPI 基址 0x0300_0000",
+      "tag": "部分已知",
+      "pos": [
+        936,
+        130
+      ],
+      "size": [
+        140,
+        80
+      ]
+    },
+    {
+      "id": "clocks",
+      "type": "database",
+      "label": "时钟 / 复位责任",
+      "sublabel": "HIF · APB · SIF · PTP",
+      "tag": "待绑定",
+      "pos": [
+        396,
+        380
+      ],
+      "size": [
+        140,
+        80
+      ]
+    },
+    {
+      "id": "ptp",
+      "type": "security",
+      "label": "PTP 时钟同步",
+      "sublabel": "同步状态 ≠ 采样时刻",
+      "tag": "参考",
+      "pos": [
+        576,
+        380
+      ],
+      "size": [
+        140,
+        80
+      ]
+    },
+    {
+      "id": "peripherals",
+      "type": "backend",
+      "label": "外设控制器",
+      "sublabel": "I2C·SPI·UART·GPIO",
+      "tag": "PERIPH",
+      "pos": [
+        936,
+        380
+      ],
+      "size": [
+        140,
+        80
+      ]
+    },
+    {
+      "id": "board-periph",
+      "type": "external",
+      "label": "板上外设",
+      "sublabel": "传感器·时钟·EEPROM",
+      "tag": "BOARD",
+      "pos": [
+        756,
+        630
+      ],
+      "size": [
+        140,
+        80
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "主机",
+      "wraps": [
+        "host-cmd"
+      ],
+      "pad": 24
+    },
+    {
+      "kind": "region",
+      "label": "HSB IP · 控制面",
+      "wraps": [
+        "host-rx",
+        "rx-parser",
+        "ecb",
+        "apb",
+        "reg-map",
+        "clocks",
+        "ptp",
+        "peripherals"
+      ],
+      "pad": 26
+    },
+    {
+      "kind": "region",
+      "label": "板级外设（IP 之外）",
+      "wraps": [
+        "board-periph"
+      ],
+      "pad": 24
+    }
+  ],
+  "connections": [
+    {
+      "id": "cmd-to-hostRx",
+      "from": "host-cmd",
+      "to": "host-rx",
+      "label": "控制以太网帧",
+      "variant": "dashed",
+      "labelDy": 62,
+      "width": 2.5
+    },
+    {
+      "id": "hostRx-to-parser",
+      "from": "host-rx",
+      "to": "rx-parser",
+      "label": "无 FCS 以太网帧",
+      "variant": "dashed",
+      "labelDy": 62,
+      "width": 2.5
+    },
+    {
+      "id": "parser-to-ecb",
+      "from": "rx-parser",
+      "to": "ecb",
+      "label": "ECB 请求",
+      "variant": "dashed",
+      "labelDy": 62,
+      "width": 2.5
+    },
+    {
+      "id": "ecb-to-apb",
+      "from": "ecb",
+      "to": "apb",
+      "label": "APB 读/写",
+      "variant": "dashed",
+      "labelDy": 62,
+      "width": 2.5
+    },
+    {
+      "id": "apb-to-regmap",
+      "from": "apb",
+      "to": "reg-map",
+      "label": "32-bit 访问",
+      "variant": "dashed",
+      "width": 2.5,
+      "labelAt": [
+        916,
+        224
+      ]
+    },
+    {
+      "id": "regmap-to-periph",
+      "from": "reg-map",
+      "to": "peripherals",
+      "label": "外设 FIFO/控制",
+      "variant": "dashed",
+      "width": 2.5,
+      "labelAt": [1110, 295]
+    },
+    {
+      "id": "periph-to-board",
+      "from": "peripherals",
+      "to": "board-periph",
+      "label": "外设 IO",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "width": 2.5
+    },
+    {
+      "id": "clocks-to-apb",
+      "from": "clocks",
+      "to": "apb",
+      "label": "APB 时钟 / 复位",
+      "variant": "dashed",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "clocks-to-ptp",
+      "from": "clocks",
+      "to": "ptp",
+      "label": "i_ptp_clk",
+      "variant": "dashed",
+      "labelAt": [
+        556,
+        474
+      ]
+    },
+    {
+      "id": "ecb-response",
+      "from": "ecb",
+      "to": "host-cmd",
+      "label": "ECB 响应：命令码 + 0x80",
+      "variant": "dashed",
+      "fromSide": "top",
+      "toSide": "top",
+      "via": [
+        [
+          646,
+          70
+        ],
+        [
+          106,
+          70
+        ]
+      ],
+      "labelAt": [
+        376,
+        84
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "参考事务；项目启动状态见恢复子图",
+      "items": [
+        "ECB 请求 / 响应与序列校验保留；控制权必须单一且可追踪",
+        "接收内存与队列就绪后才开流；超时重试须识别非幂等寄存器"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "时钟、复位与重新枚举",
+      "items": [
+        "四域频率、CDC、复位释放、PTP 失锁策略由 RTL 与板级设计绑定",
+        "停流 → 排空 / 隔离 DMA → 重建映射 → 校验 → 再开流；不可盲目复位"
+      ]
+    }
+  ]
+}

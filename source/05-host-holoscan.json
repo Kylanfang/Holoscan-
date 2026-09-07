@@ -1,0 +1,395 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "主机接收 · RoCE 与 Socket 分支",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1368,
+      800
+    ],
+    "views": [
+      {
+        "id": "rdma-receive",
+        "label": "RDMA 数据接收",
+        "focus": [
+          "hsb-dp",
+          "cx7",
+          "gpu-mem",
+          "operators",
+          "app"
+        ],
+        "note": "RoCE Write 直写 GPU 显存，Write-Immediate 中断唤醒 RoceReceiverOp 返回整帧。"
+      },
+      {
+        "id": "socket-fallback",
+        "label": "Socket 备用路径",
+        "focus": [
+          "hsb-dp",
+          "fallback",
+          "system-mem",
+          "operators"
+        ],
+        "note": "无 SmartNIC 时经内核协议栈到系统内存，由 LinuxReceiverOperator 接收。"
+      },
+      {
+        "id": "control-config",
+        "label": "控制与配置路径",
+        "focus": [
+          "app",
+          "hololink-lib",
+          "sensor-obj",
+          "hsb-ctrl",
+          "hsb-dp",
+          "rdma-io"
+        ],
+        "note": "应用经 hololink 对象与 ECB 控制面配置 FPGA 寄存器、传感器与 RDMA 通道。"
+      }
+    ],
+    "visual_preset": "signal-flow"
+  },
+  "components": [
+    {
+      "id": "app",
+      "type": "frontend",
+      "label": "Holoscan 应用",
+      "sublabel": "项目 Application · 类名待绑定",
+      "tag": "APP",
+      "pos": [
+        60,
+        120
+      ],
+      "size": [
+        190,
+        80
+      ]
+    },
+    {
+      "id": "hololink-lib",
+      "type": "frontend",
+      "label": "hololink 模块",
+      "sublabel": "Enumerator·DataChannel",
+      "tag": "LIB",
+      "pos": [
+        60,
+        310
+      ],
+      "size": [
+        190,
+        80
+      ]
+    },
+    {
+      "id": "sensor-obj",
+      "type": "frontend",
+      "label": "传感器对象",
+      "sublabel": "Imx274Cam·Imx477Cam",
+      "tag": "DRIVER",
+      "pos": [
+        60,
+        500
+      ],
+      "size": [
+        190,
+        80
+      ]
+    },
+    {
+      "id": "hsb-ctrl",
+      "type": "security",
+      "label": "HSB 控制面",
+      "sublabel": "ECB→APB·外设",
+      "tag": "FPGA",
+      "pos": [
+        60,
+        690
+      ],
+      "size": [
+        190,
+        80
+      ]
+    },
+    {
+      "id": "hsb-dp",
+      "type": "backend",
+      "label": "HSB 数据面",
+      "sublabel": "CoE/RoCE/UDP · 10GbE",
+      "tag": "FPGA",
+      "pos": [
+        480,
+        690
+      ],
+      "size": [
+        190,
+        80
+      ]
+    },
+    {
+      "id": "fallback",
+      "type": "backend",
+      "label": "Socket 接收",
+      "sublabel": "LinuxReceiverOperator",
+      "tag": "FB",
+      "pos": [
+        480,
+        500
+      ],
+      "size": [
+        190,
+        80
+      ]
+    },
+    {
+      "id": "system-mem",
+      "type": "database",
+      "label": "主机接收缓冲",
+      "sublabel": "到 GPU 的交接依平台",
+      "tag": "CPU",
+      "pos": [
+        480,
+        310
+      ],
+      "size": [
+        190,
+        80
+      ]
+    },
+    {
+      "id": "operators",
+      "type": "cloud",
+      "label": "校验 / 格式适配算子",
+      "sublabel": "按 RAW 或 RGB 选择处理",
+      "tag": "待绑定",
+      "pos": [
+        900,
+        120
+      ],
+      "size": [
+        190,
+        80
+      ]
+    },
+    {
+      "id": "gpu-mem",
+      "type": "database",
+      "label": "GPU 显存",
+      "sublabel": "注册 · 可见性 · 防覆盖",
+      "tag": "待验证",
+      "pos": [
+        900,
+        310
+      ],
+      "size": [
+        190,
+        80
+      ]
+    },
+    {
+      "id": "rdma-io",
+      "type": "messagebus",
+      "label": "RDMA 网络 I/O",
+      "sublabel": "驱动 / MR / QP / CQ",
+      "tag": "待绑定",
+      "pos": [
+        680,
+        500
+      ],
+      "size": [
+        180,
+        80
+      ]
+    },
+    {
+      "id": "cx7",
+      "type": "backend",
+      "label": "ConnectX SmartNIC",
+      "sublabel": "型号与 PCIe 拓扑待绑定",
+      "tag": "待选型",
+      "pos": [
+        900,
+        690
+      ],
+      "size": [
+        190,
+        80
+      ]
+    },
+    {
+      "id": "completion",
+      "type": "messagebus",
+      "label": "Completion Queue",
+      "sublabel": "CQE · CPU 事件 · Buffer 索引",
+      "tag": "EVENT",
+      "pos": [
+        1120,
+        500
+      ],
+      "size": [
+        180,
+        80
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "HSB 设备（FPGA）",
+      "wraps": [
+        "hsb-ctrl",
+        "hsb-dp"
+      ],
+      "pad": 24
+    },
+    {
+      "kind": "region",
+      "label": "加速硬件",
+      "wraps": [
+        "cx7",
+        "gpu-mem",
+        "completion"
+      ],
+      "pad": 24
+    }
+  ],
+  "connections": [
+    {
+      "id": "app-to-lib",
+      "from": "app",
+      "to": "hololink-lib",
+      "label": "Python/C++ API",
+      "variant": "dashed",
+      "labelDy": 30
+    },
+    {
+      "id": "lib-to-sensor",
+      "from": "hololink-lib",
+      "to": "sensor-obj",
+      "label": "get_i2c 事务",
+      "variant": "dashed",
+      "labelDy": 30
+    },
+    {
+      "id": "sensor-to-ctrl",
+      "from": "sensor-obj",
+      "to": "hsb-ctrl",
+      "label": "I2C/SPI 寄存器",
+      "variant": "dashed",
+      "labelDy": 30
+    },
+    {
+      "id": "ctrl-to-dp",
+      "from": "hsb-ctrl",
+      "to": "hsb-dp",
+      "label": "配置数据面",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "dp-to-cx7",
+      "from": "hsb-dp",
+      "to": "cx7",
+      "label": "10GbE UDP/RoCE",
+      "variant": "emphasis",
+      "width": 3
+    },
+    {
+      "id": "cx7-to-gpu",
+      "from": "cx7",
+      "to": "gpu-mem",
+      "label": "RDMA Write 直写",
+      "variant": "emphasis",
+      "labelDy": -40,
+      "width": 3.5
+    },
+    {
+      "id": "gpu-to-ops",
+      "from": "gpu-mem",
+      "to": "operators",
+      "label": "校验与可见性门槛",
+      "variant": "emphasis",
+      "labelDy": -40,
+      "width": 2.5
+    },
+    {
+      "id": "cx7-to-completion",
+      "from": "cx7",
+      "to": "completion",
+      "label": "Write-Immediate / CQE",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "bottom"
+    },
+    {
+      "id": "completion-to-ops",
+      "from": "completion",
+      "to": "operators",
+      "label": "唤醒 RoceReceiverOp",
+      "variant": "dashed",
+      "fromSide": "top",
+      "toSide": "right"
+    },
+    {
+      "id": "ops-to-app",
+      "from": "operators",
+      "to": "app",
+      "label": "帧 + 元数据",
+      "variant": "emphasis",
+      "width": 2.5,
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "dp-to-fallback",
+      "from": "hsb-dp",
+      "to": "fallback",
+      "label": "UDP（无卸载）",
+      "variant": "default",
+      "labelDy": -40
+    },
+    {
+      "id": "fallback-to-mem",
+      "from": "fallback",
+      "to": "system-mem",
+      "label": "Socket 接收",
+      "variant": "default",
+      "labelDy": -40
+    },
+    {
+      "id": "mem-to-ops",
+      "from": "system-mem",
+      "to": "operators",
+      "label": "上传 / 映射适配",
+      "variant": "default",
+      "fromSide": "top",
+      "toSide": "left"
+    },
+    {
+      "id": "rdma-to-cx7",
+      "from": "rdma-io",
+      "to": "cx7",
+      "label": "verbs/DOCA WQ",
+      "variant": "dashed",
+      "labelDy": 30
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "两条物理路径分别验收",
+      "items": [
+        "RoCE：NIC 直写注册缓冲；Socket：CPU / 内核接收后按平台交接 GPU",
+        "FPGA PCIe DMA 是另一候选后端，未纳入本图基准主路径"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "缓冲复用与工作区隔离",
+      "items": [
+        "释放不能凭图约束发送端；须证明信用 / 地址轮换或时限机制",
+        "必要时 GPU 内复制到工作区；不等于 CPU 参与有效载荷拷贝"
+      ]
+    }
+  ]
+}

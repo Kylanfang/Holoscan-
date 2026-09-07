@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "实时执行域 · 本地反馈与失效隔离",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1380,
+      800
+    ],
+    "visual_preset": "signal-flow"
+  },
+  "components": [
+    {
+      "id": "rt-planner",
+      "type": "cloud",
+      "label": "AI 规划输出",
+      "sublabel": "序号 · 产生时间 · 有效期",
+      "tag": "拟议",
+      "pos": [
+        40,
+        130
+      ],
+      "size": [
+        230,
+        86
+      ]
+    },
+    {
+      "id": "rt-gate",
+      "type": "security",
+      "label": "目标接收门槛",
+      "sublabel": "新鲜度 · 限幅 · 模式校验",
+      "tag": "拟议",
+      "pos": [
+        410,
+        130
+      ],
+      "size": [
+        230,
+        86
+      ]
+    },
+    {
+      "id": "rt-servo",
+      "type": "backend",
+      "label": "实时控制器",
+      "sublabel": "周期 / deadline 待冻结",
+      "tag": "拟议",
+      "pos": [
+        780,
+        130
+      ],
+      "size": [
+        230,
+        86
+      ]
+    },
+    {
+      "id": "rt-drive",
+      "type": "external",
+      "label": "驱动与执行器",
+      "sublabel": "总线 · 使能接口待选",
+      "tag": "拟议",
+      "pos": [
+        780,
+        400
+      ],
+      "size": [
+        230,
+        86
+      ]
+    },
+    {
+      "id": "rt-sense",
+      "type": "external",
+      "label": "本地运动反馈",
+      "sublabel": "编码器 / 电流 / 力矩待选",
+      "tag": "拟议",
+      "pos": [
+        410,
+        400
+      ],
+      "size": [
+        230,
+        86
+      ]
+    },
+    {
+      "id": "rt-monitor",
+      "type": "security",
+      "label": "独立故障监控",
+      "sublabel": "AI 心跳 · 独立性待验证",
+      "tag": "拟议",
+      "pos": [
+        40,
+        650
+      ],
+      "size": [
+        230,
+        86
+      ]
+    },
+    {
+      "id": "rt-stop",
+      "type": "security",
+      "label": "停机执行路径",
+      "sublabel": "制动 / 去使能方案待定",
+      "tag": "拟议",
+      "pos": [
+        780,
+        650
+      ],
+      "size": [
+        230,
+        86
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "rt-command",
+      "from": "rt-planner",
+      "to": "rt-gate",
+      "label": "带有效期目标",
+      "variant": "emphasis"
+    },
+    {
+      "id": "rt-accept",
+      "from": "rt-gate",
+      "to": "rt-servo",
+      "label": "有效目标",
+      "variant": "emphasis"
+    },
+    {
+      "id": "rt-output",
+      "from": "rt-servo",
+      "to": "rt-drive",
+      "label": "周期命令",
+      "variant": "emphasis",
+      "labelAt": [
+        982,
+        300
+      ]
+    },
+    {
+      "id": "rt-feedback",
+      "from": "rt-drive",
+      "to": "rt-sense",
+      "label": "运动 / 电气状态",
+      "variant": "emphasis"
+    },
+    {
+      "id": "rt-feedback-input",
+      "from": "rt-sense",
+      "to": "rt-gate",
+      "label": "本地反馈",
+      "variant": "emphasis"
+    },
+    {
+      "id": "rt-halt",
+      "from": "rt-monitor",
+      "to": "rt-stop",
+      "label": "故障触发停机",
+      "variant": "dashed"
+    },
+    {
+      "id": "rt-disable",
+      "from": "rt-stop",
+      "to": "rt-drive",
+      "label": "独立使能 / 制动",
+      "variant": "dashed"
+    },
+    {
+      "id": "rt-heartbeat",
+      "from": "rt-planner",
+      "to": "rt-monitor",
+      "label": "AI 心跳 / 超时",
+      "variant": "dashed",
+      "labelAt": [
+        235,
+        420
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "候选控制架构；没有硬实时验收结论",
+      "items": [
+        "本地反馈进入控制域，不等待相机 / GPU 大闭环；反馈算法位置须绑定",
+        "失效目标由控制器进入保持、减速或停机；具体策略按执行器定义"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "可验证条件与故障域",
+      "items": [
+        "冻结周期、最大数据年龄、超时动作与恢复门槛；P99 不证明硬实时",
+        "故障监控须绑定输入与独立性证据；GPU / 网络失效时验证停机"
+      ]
+    }
+  ]
+}

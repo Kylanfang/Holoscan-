@@ -1,0 +1,338 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "HSB 数据面 · 接口限制与过载责任",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1368,
+      760
+    ],
+    "views": [
+      {
+        "id": "uplink-path",
+        "label": "上行数据主路径",
+        "focus": [
+          "sensor-front",
+          "sif-rx",
+          "cdc-fifo",
+          "window-ctrl",
+          "packetizer",
+          "hif-tx",
+          "eth-mac"
+        ],
+        "note": "传感器 AXI-Stream 收流，跨时钟域后按窗口封包为 CoE/RoCE/UDP 帧发往主机。"
+      },
+      {
+        "id": "downlink-event",
+        "label": "下行与事件路径",
+        "focus": [
+          "eth-mac",
+          "roce-decap",
+          "sif-tx",
+          "sensor-front",
+          "sensor-event"
+        ],
+        "note": "主机 RoCE Send 解包后经 Sensor TX 下行；i_sif_event 事件经 CDC 上报主机。"
+      }
+    ],
+    "visual_preset": "signal-flow"
+  },
+  "components": [
+    {
+      "id": "sensor-front",
+      "type": "external",
+      "label": "前端 / HSB 适配",
+      "sublabel": "有效长度 · 填充 · 字节序",
+      "tag": "待绑定",
+      "pos": [
+        36,
+        130
+      ],
+      "size": [
+        150,
+        80
+      ]
+    },
+    {
+      "id": "sif-rx",
+      "type": "frontend",
+      "label": "Sensor RX 接口",
+      "sublabel": "TKEEP 忽略 · 版本须核对",
+      "tag": "参考约束",
+      "pos": [
+        246,
+        130
+      ],
+      "size": [
+        166,
+        80
+      ]
+    },
+    {
+      "id": "cdc-fifo",
+      "type": "database",
+      "label": "CDC / 接收 FIFO",
+      "sublabel": "深度 · 复位 · 溢出待定",
+      "tag": "待绑定",
+      "pos": [
+        472,
+        130
+      ],
+      "size": [
+        150,
+        80
+      ]
+    },
+    {
+      "id": "window-ctrl",
+      "type": "backend",
+      "label": "Sensor Window",
+      "sublabel": "字节计数 · TLAST",
+      "tag": "WINDOW",
+      "pos": [
+        682,
+        130
+      ],
+      "size": [
+        160,
+        80
+      ]
+    },
+    {
+      "id": "packetizer",
+      "type": "backend",
+      "label": "仲裁 / Packetizer",
+      "sublabel": "准入与公平性待项目设计",
+      "tag": "部分参考",
+      "pos": [
+        902,
+        130
+      ],
+      "size": [
+        164,
+        80
+      ]
+    },
+    {
+      "id": "sensor-event",
+      "type": "security",
+      "label": "Sensor Event",
+      "sublabel": "i_sif_event[15:0]",
+      "tag": "EVT",
+      "pos": [
+        36,
+        380
+      ],
+      "size": [
+        170,
+        80
+      ]
+    },
+    {
+      "id": "sif-tx",
+      "type": "frontend",
+      "label": "Sensor TX 接口",
+      "sublabel": "下行 AXI-Stream",
+      "tag": "SIF",
+      "pos": [
+        246,
+        380
+      ],
+      "size": [
+        166,
+        80
+      ]
+    },
+    {
+      "id": "roce-decap",
+      "type": "backend",
+      "label": "RoCE Send 解包",
+      "sublabel": "剥离网络头/iCRC",
+      "tag": "RX",
+      "pos": [
+        472,
+        380
+      ],
+      "size": [
+        160,
+        80
+      ]
+    },
+    {
+      "id": "hif-tx",
+      "type": "messagebus",
+      "label": "Host TX 接口",
+      "sublabel": "HIF AXI-S 156.25MHz",
+      "tag": "HIF",
+      "pos": [
+        902,
+        380
+      ],
+      "size": [
+        164,
+        80
+      ]
+    },
+    {
+      "id": "eth-mac",
+      "type": "backend",
+      "label": "以太网 MAC+PHY",
+      "sublabel": "10GbE · FCS 由 MAC 加",
+      "tag": "MAC",
+      "pos": [
+        902,
+        630
+      ],
+      "size": [
+        164,
+        80
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "板级前端（IP 之外）",
+      "wraps": [
+        "sensor-front"
+      ],
+      "pad": 24
+    },
+    {
+      "kind": "region",
+      "label": "HSB IP · 数据面",
+      "wraps": [
+        "sif-rx",
+        "cdc-fifo",
+        "window-ctrl",
+        "packetizer",
+        "hif-tx",
+        "sensor-event",
+        "sif-tx",
+        "roce-decap"
+      ],
+      "pad": 26
+    },
+    {
+      "kind": "region",
+      "label": "以太网接口（IP 之外）",
+      "wraps": [
+        "eth-mac"
+      ],
+      "pad": 24
+    }
+  ],
+  "connections": [
+    {
+      "id": "front-to-sifrx",
+      "from": "sensor-front",
+      "to": "sif-rx",
+      "label": "补齐后的 AXI-S",
+      "variant": "emphasis",
+      "width": 2.5,
+      "labelAt": [
+        300,
+        234
+      ]
+    },
+    {
+      "id": "sifrx-to-cdc",
+      "from": "sif-rx",
+      "to": "cdc-fifo",
+      "label": "SIF 时钟域",
+      "variant": "emphasis",
+      "labelDy": 62,
+      "width": 2.5
+    },
+    {
+      "id": "cdc-to-window",
+      "from": "cdc-fifo",
+      "to": "window-ctrl",
+      "label": "HIF 时钟域",
+      "variant": "emphasis",
+      "labelDy": 62,
+      "width": 2.5
+    },
+    {
+      "id": "window-to-pkt",
+      "from": "window-ctrl",
+      "to": "packetizer",
+      "label": "窗口数据",
+      "variant": "emphasis",
+      "labelDy": 62,
+      "width": 2.5
+    },
+    {
+      "id": "pkt-to-hiftx",
+      "from": "packetizer",
+      "to": "hif-tx",
+      "label": "数据包 + 元数据(0x2B)",
+      "variant": "emphasis",
+      "labelDx": 80,
+      "width": 3,
+      "labelDy": 30
+    },
+    {
+      "id": "hiftx-to-mac",
+      "from": "hif-tx",
+      "to": "eth-mac",
+      "label": "HIF AXI-Stream",
+      "variant": "emphasis",
+      "labelDx": -95,
+      "width": 3,
+      "labelDy": 36
+    },
+    {
+      "id": "mac-to-decap",
+      "from": "eth-mac",
+      "to": "roce-decap",
+      "label": "RoCE Send（下行）",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "decap-to-siftx",
+      "from": "roce-decap",
+      "to": "sif-tx",
+      "label": "剥头后数据",
+      "variant": "default"
+    },
+    {
+      "id": "siftx-to-front",
+      "from": "sif-tx",
+      "to": "sensor-front",
+      "label": "下行数据/配置",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "front-to-event",
+      "from": "sensor-front",
+      "to": "sensor-event",
+      "label": "i_sif_event",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "接口契约：不能把 AXI-S 当作任意字节流",
+      "items": [
+        "HSB 2.7 文档：TKEEP 忽略；完整 TDATA 发送，填充需计入长度约定",
+        "TLAST、窗口、CRC 覆盖与变长帧须成组验证，禁止半帧静默消费"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "过载策略待实现；参考延迟不是端到端指标",
+      "items": [
+        "各模态 FIFO / 仲裁 / 可暂停性 / 整帧丢弃 / 恢复均见契约台账",
+        "9 Gbit/s 停顿 20 ms 需 22.5 MB；50 周期仅为参考包化条件"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,361 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "多模态前端 · 独立流与格式责任",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1368,
+      820
+    ],
+    "views": [
+      {
+        "id": "video-path",
+        "label": "视频预处理",
+        "focus": [
+          "camera",
+          "video-pipe",
+          "align",
+          "tensor-pack",
+          "transport"
+        ],
+        "note": "RAW 由 GPU 解码/ISP；FPGA 若输出 RGB 或特征，主机必须使用匹配适配器。"
+      },
+      {
+        "id": "audio-path",
+        "label": "音频预处理",
+        "focus": [
+          "audio",
+          "audio-pipe",
+          "align",
+          "tensor-pack",
+          "transport"
+        ],
+        "note": "PCM/Mel 输出二选一并绑定采样率、窗口与定点误差，尚无可复核报告。"
+      },
+      {
+        "id": "aux-path",
+        "label": "雷达与 IMU",
+        "focus": [
+          "radar",
+          "radar-pipe",
+          "imu",
+          "imu-pipe",
+          "align"
+        ],
+        "note": "雷达和 IMU 的接口、算法边界与数据格式尚需绑定项目实现。"
+      }
+    ],
+    "visual_preset": "signal-flow"
+  },
+  "components": [
+    {
+      "id": "camera",
+      "type": "external",
+      "label": "相机",
+      "sublabel": "MIPI CSI-2 · RAW Bayer",
+      "tag": "材料声明",
+      "pos": [
+        30,
+        100
+      ],
+      "size": [
+        150,
+        72
+      ]
+    },
+    {
+      "id": "audio",
+      "type": "external",
+      "label": "麦克风 / 音频",
+      "sublabel": "I²S/TDM/PDM 待确认",
+      "tag": "材料声明",
+      "pos": [
+        30,
+        280
+      ],
+      "size": [
+        150,
+        72
+      ]
+    },
+    {
+      "id": "radar",
+      "type": "external",
+      "label": "雷达",
+      "sublabel": "ADC/帧接口待确认",
+      "tag": "待绑定",
+      "pos": [
+        30,
+        460
+      ],
+      "size": [
+        150,
+        72
+      ]
+    },
+    {
+      "id": "imu",
+      "type": "external",
+      "label": "IMU",
+      "sublabel": "SPI/UART 待确认",
+      "tag": "待绑定",
+      "pos": [
+        30,
+        640
+      ],
+      "size": [
+        150,
+        72
+      ]
+    },
+    {
+      "id": "video-pipe",
+      "type": "backend",
+      "label": "视频适配 / 可选预处理",
+      "sublabel": "RAW 或 RGB · 不重复 ISP",
+      "tag": "分工待冻结",
+      "pos": [
+        260,
+        100
+      ],
+      "size": [
+        210,
+        72
+      ]
+    },
+    {
+      "id": "audio-pipe",
+      "type": "backend",
+      "label": "音频预处理链",
+      "sublabel": "PCM 或 Mel · 误差待测",
+      "tag": "分工待冻结",
+      "pos": [
+        260,
+        280
+      ],
+      "size": [
+        210,
+        72
+      ]
+    },
+    {
+      "id": "radar-pipe",
+      "type": "backend",
+      "label": "雷达整理链",
+      "sublabel": "帧化 / 点云 / 特征边界待定",
+      "tag": "待实现",
+      "pos": [
+        260,
+        460
+      ],
+      "size": [
+        210,
+        72
+      ]
+    },
+    {
+      "id": "imu-pipe",
+      "type": "backend",
+      "label": "IMU 整理链",
+      "sublabel": "标定 · 单位 · 坐标转换",
+      "tag": "待实现",
+      "pos": [
+        260,
+        640
+      ],
+      "size": [
+        210,
+        72
+      ]
+    },
+    {
+      "id": "align",
+      "type": "security",
+      "label": "时标与流标识封装",
+      "sublabel": "各模态独立 · 不等待凑齐",
+      "tag": "拟议",
+      "pos": [
+        590,
+        330
+      ],
+      "size": [
+        210,
+        82
+      ]
+    },
+    {
+      "id": "tensor-pack",
+      "type": "database",
+      "label": "版本化载荷描述",
+      "sublabel": "格式 · 有效长度 · 填充",
+      "tag": "待冻结",
+      "pos": [
+        880,
+        330
+      ],
+      "size": [
+        200,
+        82
+      ]
+    },
+    {
+      "id": "transport",
+      "type": "messagebus",
+      "label": "HSB 传输适配",
+      "sublabel": "RoCE 基准候选 · 带宽待测",
+      "tag": "待绑定",
+      "pos": [
+        1160,
+        330
+      ],
+      "size": [
+        180,
+        82
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "多模态输入",
+      "wraps": [
+        "camera",
+        "audio",
+        "radar",
+        "imu"
+      ],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "FPGA 模态处理链",
+      "wraps": [
+        "video-pipe",
+        "audio-pipe",
+        "radar-pipe",
+        "imu-pipe",
+        "align",
+        "tensor-pack"
+      ],
+      "pad": 22
+    }
+  ],
+  "connections": [
+    {
+      "id": "camera-video",
+      "from": "camera",
+      "to": "video-pipe",
+      "label": "RAW 帧",
+      "variant": "emphasis",
+      "width": 2.5
+    },
+    {
+      "id": "audio-audio",
+      "from": "audio",
+      "to": "audio-pipe",
+      "label": "PCM / 原始采样",
+      "variant": "emphasis",
+      "width": 2.5
+    },
+    {
+      "id": "radar-radar",
+      "from": "radar",
+      "to": "radar-pipe",
+      "label": "雷达帧",
+      "variant": "emphasis",
+      "width": 2.5
+    },
+    {
+      "id": "imu-imu",
+      "from": "imu",
+      "to": "imu-pipe",
+      "label": "惯导样本",
+      "variant": "emphasis",
+      "width": 2.5
+    },
+    {
+      "id": "video-align",
+      "from": "video-pipe",
+      "to": "align",
+      "label": "RAW / RGB 块",
+      "variant": "emphasis",
+      "width": 2.5
+    },
+    {
+      "id": "audio-align",
+      "from": "audio-pipe",
+      "to": "align",
+      "label": "PCM / Mel 块",
+      "variant": "emphasis",
+      "width": 2.5,
+      "labelAt": [
+        590,
+        300
+      ]
+    },
+    {
+      "id": "radar-align",
+      "from": "radar-pipe",
+      "to": "align",
+      "label": "雷达帧",
+      "variant": "emphasis",
+      "width": 2.5,
+      "labelAt": [
+        555,
+        438
+      ]
+    },
+    {
+      "id": "imu-align",
+      "from": "imu-pipe",
+      "to": "align",
+      "label": "IMU 窗口",
+      "variant": "emphasis",
+      "width": 2.5
+    },
+    {
+      "id": "align-tensor",
+      "from": "align",
+      "to": "tensor-pack",
+      "label": "独立流 + 时标",
+      "variant": "emphasis",
+      "width": 3,
+      "labelAt": [
+        840,
+        426
+      ]
+    },
+    {
+      "id": "tensor-transport",
+      "from": "tensor-pack",
+      "to": "transport",
+      "label": "描述与载荷",
+      "variant": "emphasis",
+      "width": 3,
+      "labelAt": [
+        1120,
+        426
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "计算边界与速率必须同时冻结",
+      "items": [
+        "4K60 示例：紧凑 RAW10 4.97664 Gbit/s；RGB888 11.943936 Gbit/s",
+        "仅有效像素计算；不含协议和填充，不是项目配置或实测"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "时标与证据边界",
+      "items": [
+        "保留采样、到达时刻及误差；融合端定义迟到 / 缺失 / 失锁行为",
+        "视频音频仅沿用原交付 PPT 声明；RTL、资源、误差报告待绑定"
+      ]
+    }
+  ]
+}

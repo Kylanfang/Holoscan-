@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "算法与格式分工 · 两种候选配置",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1380,
+      800
+    ],
+    "visual_preset": "signal-flow"
+  },
+  "components": [
+    {
+      "id": "fmt-a-front",
+      "type": "backend",
+      "label": "方案 A · RAW 前端",
+      "sublabel": "打包 / 时标；不展开 RGB",
+      "tag": "候选 A",
+      "pos": [
+        40,
+        130
+      ],
+      "size": [
+        230,
+        86
+      ]
+    },
+    {
+      "id": "fmt-a-net",
+      "type": "messagebus",
+      "label": "紧凑 RAW 传输",
+      "sublabel": "4K60 RAW10 ≥ 4.97664 Gbit/s",
+      "tag": "示例下界",
+      "pos": [
+        410,
+        130
+      ],
+      "size": [
+        230,
+        86
+      ]
+    },
+    {
+      "id": "fmt-a-gpu",
+      "type": "cloud",
+      "label": "GPU 解码与 ISP",
+      "sublabel": "RAW → RGB → 模型输入",
+      "tag": "候选 A",
+      "pos": [
+        780,
+        130
+      ],
+      "size": [
+        230,
+        86
+      ]
+    },
+    {
+      "id": "fmt-b-front",
+      "type": "backend",
+      "label": "方案 B · FPGA 处理",
+      "sublabel": "去马赛克 / 缩放 / 特征",
+      "tag": "候选 B",
+      "pos": [
+        40,
+        440
+      ],
+      "size": [
+        230,
+        86
+      ]
+    },
+    {
+      "id": "fmt-b-net",
+      "type": "messagebus",
+      "label": "RGB / 特征传输",
+      "sublabel": "4K60 RGB8 ≥ 11.943936 Gbit/s",
+      "tag": "示例下界",
+      "pos": [
+        410,
+        440
+      ],
+      "size": [
+        230,
+        86
+      ]
+    },
+    {
+      "id": "fmt-b-gpu",
+      "type": "cloud",
+      "label": "GPU 格式适配与推理",
+      "sublabel": "按约定输入；跳过重复 ISP",
+      "tag": "候选 B",
+      "pos": [
+        780,
+        440
+      ],
+      "size": [
+        230,
+        86
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "fmt-a-output",
+      "from": "fmt-a-front",
+      "to": "fmt-a-net",
+      "label": "RAW + 描述",
+      "variant": "emphasis"
+    },
+    {
+      "id": "fmt-a-consume",
+      "from": "fmt-a-net",
+      "to": "fmt-a-gpu",
+      "label": "RAW 解码契约",
+      "variant": "emphasis"
+    },
+    {
+      "id": "fmt-b-output",
+      "from": "fmt-b-front",
+      "to": "fmt-b-net",
+      "label": "RGB / 特征",
+      "variant": "emphasis"
+    },
+    {
+      "id": "fmt-b-consume",
+      "from": "fmt-b-net",
+      "to": "fmt-b-gpu",
+      "label": "已处理格式",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "二选一配置，不得把两条处理链串接",
+      "items": [
+        "4K60 指 3840×2160×60；数值仅有效像素，不含开销、填充和压缩",
+        "RGB888 全尺寸超过 10GbE；需缩放、ROI、压缩或调整链路后重算"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "数值与资源关闭条件",
+      "items": [
+        "冻结色彩 / 布局 / stride / dtype / 模型输入；PCM 与 Mel 同理",
+        "绑定定点位宽、饱和规则、黄金样本误差与 FPGA 实现后资源时序"
+      ]
+    }
+  ]
+}

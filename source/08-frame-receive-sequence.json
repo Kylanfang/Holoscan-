@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "单帧接收与消费 · 拟议顺序条件",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1080,
+      600
+    ],
+    "column_fit": "spread",
+    "visual_preset": "signal-flow"
+  },
+  "participants": [
+    {
+      "id": "seq-fpga",
+      "type": "backend",
+      "label": "HSB FPGA",
+      "sublabel": "发送端"
+    },
+    {
+      "id": "seq-nic",
+      "type": "messagebus",
+      "label": "NIC",
+      "sublabel": "DMA / CQ"
+    },
+    {
+      "id": "seq-cpu",
+      "type": "frontend",
+      "label": "接收线程",
+      "sublabel": "校验与提交"
+    },
+    {
+      "id": "seq-gpu",
+      "type": "cloud",
+      "label": "GPU",
+      "sublabel": "接收 / 工作区"
+    },
+    {
+      "id": "seq-pool",
+      "type": "database",
+      "label": "缓冲管理",
+      "sublabel": "复用条件"
+    }
+  ],
+  "messages": [
+    {
+      "id": "seq-data",
+      "from": "seq-fpga",
+      "to": "seq-nic",
+      "y": 175,
+      "label": "RoCE 载荷与帧元数据",
+      "variant": "emphasis"
+    },
+    {
+      "id": "seq-write",
+      "from": "seq-nic",
+      "to": "seq-gpu",
+      "y": 219,
+      "label": "写入已注册接收缓冲",
+      "variant": "emphasis"
+    },
+    {
+      "id": "seq-cqe",
+      "from": "seq-nic",
+      "to": "seq-cpu",
+      "y": 263,
+      "label": "完成通知 / 帧身份",
+      "variant": "dashed"
+    },
+    {
+      "id": "seq-validate",
+      "from": "seq-cpu",
+      "to": "seq-pool",
+      "y": 307,
+      "label": "校验帧身份 / 长度 / 完整性",
+      "variant": "default"
+    },
+    {
+      "id": "seq-submit",
+      "from": "seq-cpu",
+      "to": "seq-gpu",
+      "y": 351,
+      "label": "满足可见性后提交消费",
+      "variant": "dashed"
+    },
+    {
+      "id": "seq-release",
+      "from": "seq-gpu",
+      "to": "seq-pool",
+      "y": 395,
+      "label": "所有消费者完成",
+      "variant": "dashed"
+    },
+    {
+      "id": "seq-grant",
+      "from": "seq-pool",
+      "to": "seq-cpu",
+      "y": 439,
+      "label": "归还缓冲 / 代际更新",
+      "variant": "dashed"
+    },
+    {
+      "id": "seq-next",
+      "from": "seq-cpu",
+      "to": "seq-fpga",
+      "y": 483,
+      "label": "复用许可（仅支持时）",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "启动前置条件与正常路径",
+      "items": [
+        "MR / QP / CQ 和接收缓冲先就绪；图示顺序须映射到实际驱动 API",
+        "完整性校验可依实现用 CPU 或 GPU；失败进入隔离而非提交推理"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "不支持复用许可时不能照搬末步",
+      "items": [
+        "须证明固定接收区时限，或 GPU 内复制到独立工作区",
+        "DMA 与 GPU 并发读写需要平台规定的可见性机制，CQE 不替代它"
+      ]
+    }
+  ]
+}

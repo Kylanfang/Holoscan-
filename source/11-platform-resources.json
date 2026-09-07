@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "部署与板级资源 · 条件待绑定",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1380,
+      800
+    ],
+    "visual_preset": "signal-flow"
+  },
+  "components": [
+    {
+      "id": "hw-sensor",
+      "type": "external",
+      "label": "传感器与前端 IO",
+      "sublabel": "lane · 电平 · 时钟 · 接插件",
+      "tag": "待 BOM",
+      "pos": [
+        40,
+        130
+      ],
+      "size": [
+        230,
+        86
+      ]
+    },
+    {
+      "id": "hw-fpga",
+      "type": "backend",
+      "label": "FPGA 与外部存储",
+      "sublabel": "型号 / DSP / BRAM / DDR",
+      "tag": "待实现报告",
+      "pos": [
+        410,
+        130
+      ],
+      "size": [
+        230,
+        86
+      ]
+    },
+    {
+      "id": "hw-link",
+      "type": "messagebus",
+      "label": "10GbE 链路",
+      "sublabel": "峰值 · 包长 · 丢帧策略",
+      "tag": "待预算",
+      "pos": [
+        780,
+        130
+      ],
+      "size": [
+        230,
+        86
+      ]
+    },
+    {
+      "id": "hw-nic",
+      "type": "messagebus",
+      "label": "主机 NIC",
+      "sublabel": "型号 · 固件 · 驱动",
+      "tag": "待 BOM",
+      "pos": [
+        780,
+        400
+      ],
+      "size": [
+        230,
+        86
+      ]
+    },
+    {
+      "id": "hw-pcie",
+      "type": "backend",
+      "label": "主机 PCIe 拓扑",
+      "sublabel": "Root / Switch / IOMMU",
+      "tag": "待验证",
+      "pos": [
+        410,
+        400
+      ],
+      "size": [
+        230,
+        86
+      ]
+    },
+    {
+      "id": "hw-gpu",
+      "type": "cloud",
+      "label": "GPU 与接收内存",
+      "sublabel": "型号 · 注册 · 可见性机制",
+      "tag": "待验证",
+      "pos": [
+        40,
+        400
+      ],
+      "size": [
+        230,
+        86
+      ]
+    },
+    {
+      "id": "hw-power",
+      "type": "security",
+      "label": "供电 / 散热 / 复位",
+      "sublabel": "功耗 · 温升 · 失效域",
+      "tag": "待板级设计",
+      "pos": [
+        410,
+        650
+      ],
+      "size": [
+        230,
+        86
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "hw-ingress",
+      "from": "hw-sensor",
+      "to": "hw-fpga",
+      "label": "模态采集",
+      "variant": "emphasis"
+    },
+    {
+      "id": "hw-net",
+      "from": "hw-fpga",
+      "to": "hw-link",
+      "label": "RoCE 基准候选",
+      "variant": "emphasis"
+    },
+    {
+      "id": "hw-wire",
+      "from": "hw-link",
+      "to": "hw-nic",
+      "label": "以太网",
+      "variant": "emphasis",
+      "labelAt": [
+        957,
+        300
+      ]
+    },
+    {
+      "id": "hw-bus",
+      "from": "hw-nic",
+      "to": "hw-pcie",
+      "label": "主机 PCIe",
+      "variant": "emphasis"
+    },
+    {
+      "id": "hw-memory",
+      "from": "hw-pcie",
+      "to": "hw-gpu",
+      "label": "注册内存访问",
+      "variant": "emphasis"
+    },
+    {
+      "id": "hw-supply",
+      "from": "hw-power",
+      "to": "hw-pcie",
+      "label": "部署约束",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "必须绑定的资源证据",
+      "items": [
+        "FPGA 时序 / CDC / 复位 / LUT / DSP / BRAM / DDR 带宽与 IO 约束",
+        "主机链路速率宽度、拓扑、驱动固件、注册方式须实机验证"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "物理连接与供电图仍待项目提供",
+      "items": [
+        "底部节点仅列共用部署约束，不代表完整板级供电 / 复位连线",
+        "满载功耗温度与长稳数据待测；FPGA PCIe DMA 后端另行立项"
+      ]
+    }
+  ]
+}
