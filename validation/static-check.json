@@ -1,0 +1,87 @@
+{
+  "date": "2026-09-05",
+  "kind": "node-vm-static-and-logic-checks",
+  "status": "pass",
+  "browser_interaction": "not_executed_policy_blocked",
+  "checks": {
+    "portal_pages": 15,
+    "immutable_embedded_diagrams": 13,
+    "navigation_nodes_exercised": 44,
+    "unknown_route_fallback": true,
+    "foreign_message_rejected": true,
+    "contracts": 21,
+    "project_verified": 0,
+    "search_filter": true,
+    "status_filter": true,
+    "budget_valid_and_invalid_inputs": true,
+    "broken_local_links": 0,
+    "artifact_receipts_match": true
+  },
+  "artifacts": [
+    {
+      "file": "00-embodied-system-overview.html",
+      "sha256": "9d78b3a1ff63d28e42b05c2742b95f6178ae2de5d072f28b93762b86ed2a4e2a",
+      "browser_status": "pass"
+    },
+    {
+      "file": "01-hsb-reference.html",
+      "sha256": "f6b9ca2899e3a673296afe6ef0644e0e30eb8ed4326da188d1d13f1357b3a87c",
+      "browser_status": "pass"
+    },
+    {
+      "file": "02-multimodal-fpga-preprocess.html",
+      "sha256": "0dcb24b1151a2aa260e1f92bff13e01da23b0e3a65330cb75ee8acf41a310841",
+      "browser_status": "pass"
+    },
+    {
+      "file": "03-hsb-datapath.html",
+      "sha256": "710e7dee044c4f2538cd2b6619a5280b8bba2987db9497d04d2bf2f32df20abd",
+      "browser_status": "pass"
+    },
+    {
+      "file": "04-hsb-control.html",
+      "sha256": "8491adc2ff0dc624fb12dc3ec560a191c59cf6f81afd70d6a058bda2676a43cd",
+      "browser_status": "pass"
+    },
+    {
+      "file": "05-host-holoscan.html",
+      "sha256": "c34f77c1b01ee32efa5f8d31ddbaad9d51b2779c5a14eb486105e04ff7d4d57b",
+      "browser_status": "pass"
+    },
+    {
+      "file": "06-engineering-verification.html",
+      "sha256": "be684d187036754e04aea0a84fbb951e1be92b29d390ca098f3b64714fa5ee38",
+      "browser_status": "pass"
+    },
+    {
+      "file": "07-buffer-lifecycle.html",
+      "sha256": "f900e6b3d912f76407b367bce92637c235bd30edd23cbac3fddd8f1a3fe21f68",
+      "browser_status": "pass"
+    },
+    {
+      "file": "08-frame-receive-sequence.html",
+      "sha256": "5132fc279bb17d487c77cc21cf63ece1434541a1680cd583a18c7dffef5f8e66",
+      "browser_status": "pass"
+    },
+    {
+      "file": "09-startup-recovery.html",
+      "sha256": "68281c8a3aa47f1269f9de8f7c6afca34e8ebb38d94bc831963341ae5b41340d",
+      "browser_status": "pass"
+    },
+    {
+      "file": "10-realtime-control.html",
+      "sha256": "ed94e571cd97866919762429ac9f9e6447112df03bb0f3e43f46a0f8398454e9",
+      "browser_status": "pass"
+    },
+    {
+      "file": "11-platform-resources.html",
+      "sha256": "c40e9899ade7e0487da5ef1c1597e8203dc827a40c486ee3c3ef8a7d94ff50b5",
+      "browser_status": "pass"
+    },
+    {
+      "file": "12-format-placement.html",
+      "sha256": "66f9e3077d3c2e7caf75a731ae23fed3ae97aca0301e718b8d19ef640c06e28a",
+      "browser_status": "pass"
+    }
+  ]
+}

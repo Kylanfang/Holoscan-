@@ -1,0 +1,317 @@
+{
+  "date": "2026-09-05",
+  "receipts": [
+    {
+      "schemaVersion": 1,
+      "ok": true,
+      "command": "deliver",
+      "type": "architecture",
+      "input": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\source\\00-embodied-system-overview.json",
+      "output": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\standalone\\00-embodied-system-overview.html",
+      "specification": {
+        "sha256": "81853768a0a970427c5ea61898d4f1b5be8476ce38e04aaa21001a10772ddcfa",
+        "bytes": 8384
+      },
+      "artifact": {
+        "sha256": "9d78b3a1ff63d28e42b05c2742b95f6178ae2de5d072f28b93762b86ed2a4e2a",
+        "bytes": 720203
+      },
+      "validation": {
+        "checksPassed": 9,
+        "checkCount": 9,
+        "compositionProfile": "showcase",
+        "compositionStatus": "pass",
+        "errors": 0,
+        "warnings": 0
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "ok": true,
+      "command": "deliver",
+      "type": "architecture",
+      "input": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\source\\01-hsb-reference.json",
+      "output": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\standalone\\01-hsb-reference.html",
+      "specification": {
+        "sha256": "4c4adaeb6fcaf8f639c4cdd7f352bd5046181b7954bcc5cb978ce910c58243dd",
+        "bytes": 8016
+      },
+      "artifact": {
+        "sha256": "f6b9ca2899e3a673296afe6ef0644e0e30eb8ed4326da188d1d13f1357b3a87c",
+        "bytes": 721829
+      },
+      "validation": {
+        "checksPassed": 9,
+        "checkCount": 9,
+        "compositionProfile": "showcase",
+        "compositionStatus": "pass",
+        "errors": 0,
+        "warnings": 0
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "ok": true,
+      "command": "deliver",
+      "type": "architecture",
+      "input": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\source\\02-multimodal-fpga-preprocess.json",
+      "output": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\standalone\\02-multimodal-fpga-preprocess.html",
+      "specification": {
+        "sha256": "43d9b6ee8ee17006a3fefd68342c831546f6fc43038e435d0fe62a23b6389afd",
+        "bytes": 7215
+      },
+      "artifact": {
+        "sha256": "0dcb24b1151a2aa260e1f92bff13e01da23b0e3a65330cb75ee8acf41a310841",
+        "bytes": 720210
+      },
+      "validation": {
+        "checksPassed": 9,
+        "checkCount": 9,
+        "compositionProfile": "showcase",
+        "compositionStatus": "pass",
+        "errors": 0,
+        "warnings": 0
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "ok": true,
+      "command": "deliver",
+      "type": "architecture",
+      "input": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\source\\03-hsb-datapath.json",
+      "output": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\standalone\\03-hsb-datapath.html",
+      "specification": {
+        "sha256": "e68b0ed7f08bac25f8233e916fddfa42f8cb33a178886dc3a573ff2365fee76a",
+        "bytes": 6948
+      },
+      "artifact": {
+        "sha256": "710e7dee044c4f2538cd2b6619a5280b8bba2987db9497d04d2bf2f32df20abd",
+        "bytes": 717660
+      },
+      "validation": {
+        "checksPassed": 9,
+        "checkCount": 9,
+        "compositionProfile": "showcase",
+        "compositionStatus": "pass",
+        "errors": 0,
+        "warnings": 0
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "ok": true,
+      "command": "deliver",
+      "type": "architecture",
+      "input": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\source\\04-hsb-control.json",
+      "output": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\standalone\\04-hsb-control.html",
+      "specification": {
+        "sha256": "409677625bcbf43bcc6dc2eae15a9983dbe868d10a528d4d059397f1fc47a9c3",
+        "bytes": 6967
+      },
+      "artifact": {
+        "sha256": "8491adc2ff0dc624fb12dc3ec560a191c59cf6f81afd70d6a058bda2676a43cd",
+        "bytes": 717082
+      },
+      "validation": {
+        "checksPassed": 9,
+        "checkCount": 9,
+        "compositionProfile": "showcase",
+        "compositionStatus": "pass",
+        "errors": 0,
+        "warnings": 0
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "ok": true,
+      "command": "deliver",
+      "type": "architecture",
+      "input": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\source\\05-host-holoscan.json",
+      "output": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\standalone\\05-host-holoscan.html",
+      "specification": {
+        "sha256": "eac2954bb0d16aa7765e76e119cd8808947d74ac148634fd004d3f1cc432aac9",
+        "bytes": 8077
+      },
+      "artifact": {
+        "sha256": "c34f77c1b01ee32efa5f8d31ddbaad9d51b2779c5a14eb486105e04ff7d4d57b",
+        "bytes": 722412
+      },
+      "validation": {
+        "checksPassed": 9,
+        "checkCount": 9,
+        "compositionProfile": "showcase",
+        "compositionStatus": "pass",
+        "errors": 0,
+        "warnings": 0
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "ok": true,
+      "command": "deliver",
+      "type": "architecture",
+      "input": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\source\\06-engineering-verification.json",
+      "output": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\standalone\\06-engineering-verification.html",
+      "specification": {
+        "sha256": "adf4d2af6bd7040a3f1372ac7f413627b21bf8f6ce4dae8e8a5bf71bd5b0eb77",
+        "bytes": 5424
+      },
+      "artifact": {
+        "sha256": "be684d187036754e04aea0a84fbb951e1be92b29d390ca098f3b64714fa5ee38",
+        "bytes": 711155
+      },
+      "validation": {
+        "checksPassed": 9,
+        "checkCount": 9,
+        "compositionProfile": "showcase",
+        "compositionStatus": "pass",
+        "errors": 0,
+        "warnings": 0
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "ok": true,
+      "command": "deliver",
+      "type": "lifecycle",
+      "input": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\source\\07-buffer-lifecycle.json",
+      "output": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\standalone\\07-buffer-lifecycle.html",
+      "specification": {
+        "sha256": "7bc64c5b26427a0a52adcd117db22dc42a4d4c3386200fd32359da9556009489",
+        "bytes": 3371
+      },
+      "artifact": {
+        "sha256": "f900e6b3d912f76407b367bce92637c235bd30edd23cbac3fddd8f1a3fe21f68",
+        "bytes": 708031
+      },
+      "validation": {
+        "checksPassed": 9,
+        "checkCount": 9,
+        "compositionProfile": "showcase",
+        "compositionStatus": "pass",
+        "errors": 0,
+        "warnings": 0
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "ok": true,
+      "command": "deliver",
+      "type": "sequence",
+      "input": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\source\\08-frame-receive-sequence.json",
+      "output": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\standalone\\08-frame-receive-sequence.html",
+      "specification": {
+        "sha256": "34b60f4eb3cfed5b1acd68211a4df1004e8b183ab3bb879c5619e64a011ee2ec",
+        "bytes": 2967
+      },
+      "artifact": {
+        "sha256": "5132fc279bb17d487c77cc21cf63ece1434541a1680cd583a18c7dffef5f8e66",
+        "bytes": 707325
+      },
+      "validation": {
+        "checksPassed": 9,
+        "checkCount": 9,
+        "compositionProfile": "showcase",
+        "compositionStatus": "pass",
+        "errors": 0,
+        "warnings": 0
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "ok": true,
+      "command": "deliver",
+      "type": "lifecycle",
+      "input": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\source\\09-startup-recovery.json",
+      "output": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\standalone\\09-startup-recovery.html",
+      "specification": {
+        "sha256": "de1fc8b25b63992f145c3fde235bc11c7850f7337b39fcbe514c9b04d45799a0",
+        "bytes": 3445
+      },
+      "artifact": {
+        "sha256": "68281c8a3aa47f1269f9de8f7c6afca34e8ebb38d94bc831963341ae5b41340d",
+        "bytes": 707176
+      },
+      "validation": {
+        "checksPassed": 9,
+        "checkCount": 9,
+        "compositionProfile": "showcase",
+        "compositionStatus": "pass",
+        "errors": 0,
+        "warnings": 0
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "ok": true,
+      "command": "deliver",
+      "type": "architecture",
+      "input": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\source\\10-realtime-control.json",
+      "output": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\standalone\\10-realtime-control.html",
+      "specification": {
+        "sha256": "91365a720892e87454352e77de87b9590f30eed0a206f47cb86cfd97675bb252",
+        "bytes": 4198
+      },
+      "artifact": {
+        "sha256": "ed94e571cd97866919762429ac9f9e6447112df03bb0f3e43f46a0f8398454e9",
+        "bytes": 710890
+      },
+      "validation": {
+        "checksPassed": 9,
+        "checkCount": 9,
+        "compositionProfile": "showcase",
+        "compositionStatus": "pass",
+        "errors": 0,
+        "warnings": 0
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "ok": true,
+      "command": "deliver",
+      "type": "architecture",
+      "input": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\source\\11-platform-resources.json",
+      "output": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\standalone\\11-platform-resources.html",
+      "specification": {
+        "sha256": "b0f507f261f8ac2920ebb73da37e9dd78222dd24b2fcd30a8ed522bf5dbb0fd2",
+        "bytes": 3750
+      },
+      "artifact": {
+        "sha256": "c40e9899ade7e0487da5ef1c1597e8203dc827a40c486ee3c3ef8a7d94ff50b5",
+        "bytes": 710038
+      },
+      "validation": {
+        "checksPassed": 9,
+        "checkCount": 9,
+        "compositionProfile": "showcase",
+        "compositionStatus": "pass",
+        "errors": 0,
+        "warnings": 0
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "ok": true,
+      "command": "deliver",
+      "type": "architecture",
+      "input": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\source\\12-format-placement.json",
+      "output": "F:\\本科学习\\学科资料\\Python\\_holoscan_review_20260905\\standalone\\12-format-placement.html",
+      "specification": {
+        "sha256": "cfb6b966291b0aa76ff72213615e8d3ec080ea5ab4721bad5b5c558a27c3a7c9",
+        "bytes": 3227
+      },
+      "artifact": {
+        "sha256": "66f9e3077d3c2e7caf75a731ae23fed3ae97aca0301e718b8d19ef640c06e28a",
+        "bytes": 706743
+      },
+      "validation": {
+        "checksPassed": 9,
+        "checkCount": 9,
+        "compositionProfile": "showcase",
+        "compositionStatus": "pass",
+        "errors": 0,
+        "warnings": 0
+      }
+    }
+  ]
+}

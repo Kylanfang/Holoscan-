@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>多模态具身智能端到端架构门户</title>
+  <style>
+    :root{color-scheme:light dark;--bg:#eef7fb;--panel:rgba(255,255,255,.9);--line:#b8d8e6;--text:#082f49;--muted:#527086;--cyan:#0891b2;--orange:#ea580c;--nav:#e3f3f8;--shadow:0 16px 48px rgba(8,47,73,.12)}
+    @media(prefers-color-scheme:dark){:root{--bg:#020d18;--panel:rgba(5,22,36,.94);--line:#1e4960;--text:#e6f7ff;--muted:#94b8ca;--nav:#08283a;--shadow:0 16px 48px rgba(0,0,0,.32)}}
+    *{box-sizing:border-box}html,body{height:100%;margin:0}body{font-family:Inter,"Microsoft YaHei",system-ui,sans-serif;background:radial-gradient(circle at 12% 0%,rgba(8,145,178,.13),transparent 28%),var(--bg);color:var(--text);overflow:auto}
+    .app{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr)}.top{display:flex;align-items:center;gap:16px;padding:12px 18px;border-bottom:1px solid var(--line);background:var(--panel);backdrop-filter:blur(16px);box-shadow:0 4px 18px rgba(8,47,73,.08);z-index:2}.brand{min-width:310px}.brand h1{font-size:18px;margin:0 0 3px}.brand p{font-size:12px;color:var(--muted);margin:0}.crumb{font-size:13px;color:var(--muted);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.actions{display:flex;gap:8px}.button{appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;padding:8px 12px;font-weight:700;cursor:pointer;text-decoration:none;font-size:13px}.button:hover,.button:focus-visible{border-color:var(--cyan);outline:none}.button.primary{background:var(--cyan);border-color:var(--cyan);color:white}.button[hidden]{display:none}
+    .workspace{min-height:0;display:grid;grid-template-columns:250px 1fr}.side{padding:14px;border-right:1px solid var(--line);background:var(--panel);overflow:auto}.section-title{font-size:11px;letter-spacing:.12em;color:var(--muted);font-weight:800;margin:6px 8px 10px}.nav{display:grid;gap:7px}.nav button{width:100%;text-align:left;border:1px solid transparent;background:transparent;color:var(--text);padding:10px;border-radius:11px;cursor:pointer}.nav button:hover{background:var(--nav)}.nav button.active{background:var(--nav);border-color:var(--line);box-shadow:inset 3px 0 var(--cyan)}.nav strong{display:block;font-size:13px;margin-bottom:3px}.nav small{display:block;color:var(--muted);font-size:11px;line-height:1.35}.status{display:inline-block;margin-top:5px;padding:2px 6px;border-radius:999px;font-size:10px;font-weight:800}.reference{color:#0369a1;background:rgba(14,165,233,.12)}.mixed{color:#b45309;background:rgba(245,158,11,.14)}.pending{color:#be123c;background:rgba(244,63,94,.12)}
+    .side-note{margin-top:14px;border-top:1px solid var(--line);padding:12px 8px;color:var(--muted);font-size:11px;line-height:1.55}.viewer-wrap{min-width:0;min-height:0;padding:10px;display:grid;grid-template-rows:auto 1fr;gap:8px}.drill{display:flex;align-items:center;gap:10px;min-height:40px;padding:7px 11px;border:1px solid var(--line);border-radius:11px;background:var(--panel);box-shadow:var(--shadow);font-size:12px;color:var(--muted)}.drill strong{color:var(--text)}.drill .spacer{flex:1}.frame{width:100%;height:100%;border:1px solid var(--line);border-radius:14px;background:white;box-shadow:var(--shadow)}
+    @media(max-width:900px){body{overflow:auto}.app{height:auto;min-height:100%}.workspace{grid-template-columns:1fr}.side{border-right:0;border-bottom:1px solid var(--line)}.nav{grid-template-columns:repeat(2,minmax(0,1fr))}.viewer-wrap{height:820px}.brand{min-width:0}.crumb{display:none}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand"><h1>多模态具身智能端到端架构</h1><p>v3 审查修订 · 13 张图 · 硬件尚未签收</p></div>
+    <div class="crumb" id="crumb">总览</div>
+    <div class="actions"><button class="button" id="back" type="button">返回上层</button><a class="button" href="README.html" target="_blank" rel="noopener">阅读说明</a><a class="button" id="standalone" target="_blank" rel="noopener">独立打开</a></div>
+  </header>
+  <div class="workspace">
+    <aside class="side">
+      <div class="section-title">架构层级</div>
+      <nav class="nav" id="nav"></nav>
+      <div class="side-note"><b>使用方式</b><br>单击可下钻的节点，然后点击画布上方的“进入内部架构”。双击节点可直接进入。浏览器前进和后退保留层级历史。<br><br><b>事实边界</b><br>“参考已核验”表示符合 NVIDIA HSB 官方资料，不等于本项目已经实装。“材料声明”只继承原交付说明，未取得原始测试报告。架构图实线表示运行数据与动作目标，虚线表示配置与事件；状态用文字标签表示。</div>
+    </aside>
+    <main class="viewer-wrap">
+      <div class="drill"><span id="hint">当前显示端到端总览，可选择 FPGA、统一数据通道或 Host/Holoscan 节点下钻。</span><span class="spacer"></span><button class="button primary" id="enter" type="button" hidden>进入内部架构</button></div>
+      <iframe class="frame" id="frame" title="架构图"></iframe>
+    </main>
+  </div>
+</div>
+<script src="portal-data.js"></script>
+<script>
+const pages={
+  "overview": {
+    "title": "L0 · 目标架构与缺口",
+    "desc": "四项首要阻断；节点可下钻",
+    "file": "standalone/00-embodied-system-overview.html",
+    "status": "mixed",
+    "label": "目标待验证"
+  },
+  "hsb": {
+    "title": "L1 · HSB 官方参考",
+    "desc": "RoCE 主路径与事件分离",
+    "file": "standalone/01-hsb-reference.html",
+    "status": "reference",
+    "label": "参考已核对"
+  },
+  "multimodal": {
+    "title": "L2 · 多模态前端",
+    "desc": "独立流、采样事件与格式责任",
+    "file": "standalone/02-multimodal-fpga-preprocess.html",
+    "status": "mixed",
+    "label": "材料声明 / 拟议"
+  },
+  "datapath": {
+    "title": "L2 · HSB 数据面",
+    "desc": "TKEEP、窗口、FIFO 与过载",
+    "file": "standalone/03-hsb-datapath.html",
+    "status": "mixed",
+    "label": "参考 / 待设计"
+  },
+  "control": {
+    "title": "L2 · HSB 控制面",
+    "desc": "事务、时钟复位与恢复责任",
+    "file": "standalone/04-hsb-control.html",
+    "status": "mixed",
+    "label": "参考 / 待绑定"
+  },
+  "host": {
+    "title": "L2 · 主机接收分支",
+    "desc": "RoCE、Socket、GPU 消费条件",
+    "file": "standalone/05-host-holoscan.html",
+    "status": "pending",
+    "label": "项目待绑定"
+  },
+  "verification": {
+    "title": "L3 · 工程签收",
+    "desc": "版本、阈值、证据与测试",
+    "file": "standalone/06-engineering-verification.html",
+    "status": "pending",
+    "label": "未签收"
+  },
+  "buffer": {
+    "title": "L3 · 缓冲生命周期",
+    "desc": "状态、隔离与真实复用机制",
+    "file": "standalone/07-buffer-lifecycle.html",
+    "status": "pending",
+    "label": "拟议协议"
+  },
+  "sequence": {
+    "title": "L3 · 接收消费时序",
+    "desc": "CQE、校验、可见性与复用",
+    "file": "standalone/08-frame-receive-sequence.html",
+    "status": "pending",
+    "label": "拟议顺序"
+  },
+  "recovery": {
+    "title": "L3 · 启动与故障恢复",
+    "desc": "禁流、就绪、DMA 排空与重建",
+    "file": "standalone/09-startup-recovery.html",
+    "status": "pending",
+    "label": "拟议协议"
+  },
+  "realtime": {
+    "title": "L3 · 实时执行域",
+    "desc": "本地反馈、目标有效期与停机",
+    "file": "standalone/10-realtime-control.html",
+    "status": "pending",
+    "label": "规划待实现"
+  },
+  "platform": {
+    "title": "L3 · 板级与部署资源",
+    "desc": "BOM、资源、PCIe、供电散热",
+    "file": "standalone/11-platform-resources.html",
+    "status": "pending",
+    "label": "证据待绑定"
+  },
+  "formats": {
+    "title": "L3 · 算法与格式分工",
+    "desc": "RAW 与 FPGA 处理候选配置",
+    "file": "standalone/12-format-placement.html",
+    "status": "pending",
+    "label": "候选未冻结"
+  },
+  "contracts": {
+    "title": "工程接口契约台账",
+    "desc": "21 项契约、关闭条件与证据状态",
+    "file": "engineering/contracts.html",
+    "status": "pending",
+    "label": "项目验证通过 0"
+  },
+  "review": {
+    "title": "审查与可重算预算",
+    "desc": "修改映射、带宽与缓存计算",
+    "file": "engineering/review.html",
+    "status": "mixed",
+    "label": "预算不是实测"
+  }
+};
+const nodeRoutes={
+  "sensors": "multimodal",
+  "fpga-pre": "multimodal",
+  "align": "multimodal",
+  "transport": "hsb",
+  "gpu-buffer": "buffer",
+  "fusion": "host",
+  "orchestrator": "host",
+  "planning": "realtime",
+  "rt-control": "realtime",
+  "actuators": "realtime",
+  "world": "realtime",
+  "fpga-dp": "datapath",
+  "fpga-ctrl": "control",
+  "rx-op": "sequence",
+  "gpu-mem": "buffer",
+  "completion": "sequence",
+  "cx": "platform",
+  "camera": "formats",
+  "video-pipe": "formats",
+  "audio-pipe": "formats",
+  "tensor-pack": "contracts",
+  "sensor-front": "contracts",
+  "cdc-fifo": "contracts",
+  "packetizer": "review",
+  "clocks": "recovery",
+  "ptp": "contracts",
+  "operators": "sequence",
+  "cx7": "platform",
+  "rdma-io": "platform",
+  "metrics": "review",
+  "evidence": "contracts",
+  "requirements": "review",
+  "contracts": "contracts",
+  "rt-planner": "formats",
+  "rt-monitor": "contracts",
+  "hw-fpga": "contracts",
+  "hw-pcie": "host",
+  "fmt-a-net": "review",
+  "fmt-b-net": "review"
+};
+const nav=document.getElementById('nav'),frame=document.getElementById('frame'),enter=document.getElementById('enter'),hint=document.getElementById('hint'),crumb=document.getElementById('crumb'),standalone=document.getElementById('standalone');
+let current='overview',pending=null;
+for(const [id,p] of Object.entries(pages)){
+  const b=document.createElement('button');b.type='button';b.dataset.page=id;b.innerHTML=`<strong>${p.title}</strong><small>${p.desc}</small><span class="status ${p.status}">${p.label}</span>`;b.onclick=()=>go(id);nav.appendChild(b);
+}
+function route(){const id=location.hash.replace(/^#\/?/,'');return pages[id]?id:'overview'}
+function go(id){if(!pages[id])return;location.hash='#/'+id}
+function render(){current=route();const p=pages[current];document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===current));crumb.textContent=`架构门户 / ${p.title}`;standalone.href=p.file;if(p.file.startsWith('standalone/')){frame.removeAttribute('src');frame.srcdoc=portalDocuments[p.file].replace('<html ', '<html data-embed="true" ');}else{frame.removeAttribute('srcdoc');frame.src=p.file;}pending=null;enter.hidden=true;hint.textContent=current==='overview'?'单击节点选择下钻，双击直接进入；本页为目标架构。':`${p.title}；相关节点可下钻，其余页面使用左侧导航。`}
+function selectNode(node){const target=nodeRoutes[node.dataset.nodeId];if(!target)return;pending=target;hint.innerHTML=`已选择 <strong>${node.dataset.nodeLabel||node.dataset.nodeId}</strong>，可进入 ${pages[target].title}`;enter.textContent=`进入 ${pages[target].title}`;enter.hidden=false}
+frame.addEventListener('load',()=>{try{const d=frame.contentDocument;d.querySelectorAll('[data-node-id]').forEach(n=>{if(!nodeRoutes[n.dataset.nodeId])return;n.style.cursor='zoom-in';n.addEventListener('click',()=>selectNode(n));n.addEventListener('dblclick',e=>{e.preventDefault();e.stopPropagation();go(nodeRoutes[n.dataset.nodeId])})})}catch(err){hint.textContent='当前浏览器限制了本地 iframe 交互；请使用左侧层级导航进入子图。'}});
+window.addEventListener('message',event=>{if(event.source!==frame.contentWindow||!event.data||event.data.type!=='archify-node-activate')return;const id=event.data.nodeId;if(!nodeRoutes[id])return;if(event.data.activation==='dblclick')go(nodeRoutes[id]);else selectNode({dataset:{nodeId:id,nodeLabel:event.data.nodeLabel||id}})});
+enter.onclick=()=>pending&&go(pending);document.getElementById('back').onclick=()=>current==='overview'?history.back():go('overview');window.addEventListener('hashchange',render);render();
+</script>
+</body>
+</html>
+
