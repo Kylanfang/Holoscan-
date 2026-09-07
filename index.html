@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="zh-CN" data-page-node-id="Gm1A3NreMtj7HvbZYhS0nv">
+<head data-page-node-id="ccEWFzbUyohwsQPdFCYzmy">
+  <meta charset="utf-8" data-page-node-id="Y1EAbsmNQiUEPp44WLwBB4">
+  <meta name="viewport" content="width=device-width,initial-scale=1" data-page-node-id="wzNWWQXTv6vpvAzfCrMTxd">
   <title>多模态具身智能端到端架构门户</title>
   <style>
     :root{color-scheme:light dark;--bg:#eef7fb;--panel:rgba(255,255,255,.9);--line:#b8d8e6;--text:#082f49;--muted:#527086;--cyan:#0891b2;--orange:#ea580c;--nav:#e3f3f8;--shadow:0 16px 48px rgba(8,47,73,.12)}
@@ -14,22 +14,22 @@
     @media(max-width:900px){body{overflow:auto}.app{height:auto;min-height:100%}.workspace{grid-template-columns:1fr}.side{border-right:0;border-bottom:1px solid var(--line)}.nav{grid-template-columns:repeat(2,minmax(0,1fr))}.viewer-wrap{height:820px}.brand{min-width:0}.crumb{display:none}}
   </style>
 </head>
-<body>
-<div class="app">
-  <header class="top">
-    <div class="brand"><h1>多模态具身智能端到端架构</h1><p>v3 审查修订 · 13 张图 · 硬件尚未签收</p></div>
-    <div class="crumb" id="crumb">总览</div>
-    <div class="actions"><button class="button" id="back" type="button">返回上层</button><a class="button" href="README.html" target="_blank" rel="noopener">阅读说明</a><a class="button" id="standalone" target="_blank" rel="noopener">独立打开</a></div>
+<body data-page-node-id="eLCImqKXydvlMOCJDr8Zho">
+<div class="app" data-page-node-id="HuxmRCofqjszCSA1YB6Xzg">
+  <header class="top" data-page-node-id="TfFAKyIuBZW50mTtETFCft">
+    <div class="brand" data-page-node-id="aVkAfJ6gidNQnTYVEEs6z9"><h1 data-page-node-id="cM3EJg6X2CpM0qaVP3GNIP">多模态具身智能端到端架构</h1><p data-page-node-id="cNvP8dTm3HHMiqvdiqZWTT">v3 审查修订 · 13 张图 · 硬件尚未签收</p></div>
+    <div class="crumb" id="crumb" data-page-node-id="Fywh0NFjtseCmprddsDcpT">总览</div>
+    <div class="actions" data-page-node-id="Txj6AgYSOcGRRkYEHtvKIm"><button class="button" id="back" type="button" data-page-node-id="gUZ77wTtE3tR8axHJKd3nL">返回上层</button><a class="button" href="README.html" target="_blank" rel="noopener" data-page-node-id="OFVGjo4UWWYY5edcOKFYGo">阅读说明</a><a class="button" id="standalone" target="_blank" rel="noopener" data-page-node-id="4xtiiZE59fc6JoXxRkWnnT">独立打开</a></div>
   </header>
-  <div class="workspace">
-    <aside class="side">
-      <div class="section-title">架构层级</div>
-      <nav class="nav" id="nav"></nav>
-      <div class="side-note"><b>使用方式</b><br>单击可下钻的节点，然后点击画布上方的“进入内部架构”。双击节点可直接进入。浏览器前进和后退保留层级历史。<br><br><b>事实边界</b><br>“参考已核验”表示符合 NVIDIA HSB 官方资料，不等于本项目已经实装。“材料声明”只继承原交付说明，未取得原始测试报告。架构图实线表示运行数据与动作目标，虚线表示配置与事件；状态用文字标签表示。</div>
+  <div class="workspace" data-page-node-id="O72kozTEidGsJsAEAo6Dw0">
+    <aside class="side" data-page-node-id="AlfRrupBI2EcRgRkd2xHf1">
+      <div class="section-title" data-page-node-id="TtcBg5PLgFDCPF4cz4ZsyA">架构层级</div>
+      <nav class="nav" id="nav" data-page-node-id="gDZvDTBfx049fnAQlIjeYv"></nav>
+      <div class="side-note" data-page-node-id="NUuits2FFb091VkM0bq8Kd"><b data-page-node-id="R0UfKLwtMIbN9gMxltatSd">使用方式</b><br data-page-node-id="iUEG4A50rANEWqMVJBBY7Z">单击可下钻的节点，然后点击画布上方的“进入内部架构”。双击节点可直接进入。浏览器前进和后退保留层级历史。<br data-page-node-id="aDKVqqADfQAVEHRHi93DJ1"><br data-page-node-id="yZZAyEwYVlaArV8c0TpZAe"><b data-page-node-id="b02XlYG7F3kIDP5yjaWTri">事实边界</b><br data-page-node-id="nplKmUzNbHHFHYhqZUvDT4">“参考已核验”表示符合 NVIDIA HSB 官方资料，不等于本项目已经实装。“材料声明”只继承原交付说明，未取得原始测试报告。架构图实线表示运行数据与动作目标，虚线表示配置与事件；状态用文字标签表示。</div>
     </aside>
-    <main class="viewer-wrap">
-      <div class="drill"><span id="hint">当前显示端到端总览，可选择 FPGA、统一数据通道或 Host/Holoscan 节点下钻。</span><span class="spacer"></span><button class="button primary" id="enter" type="button" hidden>进入内部架构</button></div>
-      <iframe class="frame" id="frame" title="架构图"></iframe>
+    <main class="viewer-wrap" data-page-node-id="wo1eztox5CXpnANCsGkGLB">
+      <div class="drill" data-page-node-id="YWDPJmoMNxY49HOkNBM2v1"><span id="hint" data-page-node-id="BuXcHvQ7pyhsyWWQiIzVFO">当前显示端到端总览，可选择 FPGA、统一数据通道或 Host/Holoscan 节点下钻。</span><span class="spacer" data-page-node-id="5svGfAEZqw3uLfFLIi47DV"></span><button class="button primary" id="enter" type="button" hidden data-page-node-id="EWgvmAEPBQAtJ0OcswkxKJ">进入内部架构</button></div>
+      <iframe class="frame" id="frame" title="架构图" data-page-node-id="80hqE0wuybaej5fuEzl8kx"></iframe>
     </main>
   </div>
 </div>
