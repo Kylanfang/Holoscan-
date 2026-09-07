@@ -1,12 +1,17 @@
 {
   "version": "v3",
   "date": "2026-09-05",
-  "totalFiles": 120,
+  "totalFiles": 121,
   "excludes": [
     "validation/manifest.json"
   ],
   "duplicateFileHashes": 0,
   "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 401,
+      "sha256": "88ca7eade4e19b60eac83a6b45eda73234d3dbc943f6108ec3f4b7098ee68b1b"
+    },
     {
       "path": "engineering/contracts.html",
       "bytes": 20769,
@@ -29,8 +34,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 12292,
-      "sha256": "c412c1cadfb405267817828e60ae91a4445b1ae7f65c13909e958f297fbff9b2"
+      "bytes": 12291,
+      "sha256": "f39d468b83ede63efae709707de890b772e57573cc81f0c0963528702e991b39"
     },
     {
       "path": "maintenance/build-embed.mjs",
@@ -602,5 +607,6 @@
       "bytes": 7945,
       "sha256": "429c4da06917196ed18e38ebce02267e9ae28b5d185fdb26cbf65694b94a4151"
     }
-  ]
+  ],
+  "lastMerged": "2026-09-07"
 }
